@@ -117,9 +117,9 @@
                     <i class="fa-regular fa-envelope text-oakamber-400"></i>
                     <span>oakviewfreight.official@gmail.com</span>
                 </a>
-                <button onclick="openGithubModal()" class="bg-white/10 hover:bg-white/20 text-white px-2.5 py-1 rounded text-[11px] font-medium transition flex items-center gap-1.5 border border-white/15">
-                    <i class="fa-brands fa-github"></i>
-                    <span>GitHub Setup Guide</span>
+                <button onclick="openLogoModal()" class="bg-oakamber-500/20 hover:bg-oakamber-500/30 text-oakamber-300 px-2.5 py-1 rounded text-[11px] font-semibold transition flex items-center gap-1.5 border border-oakamber-400/30">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Download Transparent Logo</span>
                 </button>
             </div>
         </div>
@@ -1178,14 +1178,15 @@
                 <div class="md:col-span-4 space-y-3">
                     <h4 class="text-xs font-bold uppercase tracking-widest text-white">India-to-UK Trade Lanes</h4>
                     <ul class="space-y-2.5 text-sm">
-                        <li>Nhava Sheva (JNPT) &amp; Mundra <i class="fa-solid fa-arrow-right text-[10px] mx-1 text-oakamber-400"></i> Felixstowe / Southampton</li>
-                        <li>Chennai &amp; Tuticorin <i class="fa-solid fa-arrow-right text-[10px] mx-1 text-oakamber-400"></i> London Gateway</li>
-                        <li>Delhi (DEL), Mumbai (BOM) &amp; BLR <i class="fa-solid fa-arrow-right text-[10px] mx-1 text-oakamber-400"></i> London Heathrow (LHR)</li>
+                        <li>Nhava Sheva (JNPT) &amp; Mundra &rarr; Felixstowe / Southampton</li>
+                        <li>Chennai &amp; Tuticorin &rarr; London Gateway (Apparel &amp; Textiles)</li>
+                        <li>Delhi (DEL) &amp; Mumbai (BOM) &rarr; London Heathrow Air Cargo</li>
+                        <li>Midlands &amp; Nationwide UK 3PL Fulfilment Centres</li>
                     </ul>
-                    <div class="pt-3">
-                        <button onclick="openGithubModal()" class="text-xs bg-white/5 hover:bg-white/10 text-slate-300 px-3.5 py-2 rounded-lg border border-white/10 transition inline-flex items-center gap-2">
-                            <i class="fa-brands fa-github text-oakamber-400"></i>
-                            <span>View GitHub Pages Publishing Instructions</span>
+                    <div class="pt-3 flex flex-wrap gap-2">
+                        <button onclick="openLogoModal()" class="text-xs bg-oakamber-500/15 hover:bg-oakamber-500/25 text-oakamber-300 px-3.5 py-2 rounded-lg border border-oakamber-400/30 transition inline-flex items-center gap-2 font-semibold">
+                            <i class="fa-solid fa-download text-oakamber-400"></i>
+                            <span>Download Official Logo Kit (PNG &amp; SVG)</span>
                         </button>
                     </div>
                 </div>
@@ -1202,53 +1203,144 @@
         </div>
     </footer>
 
-    <!-- GITHUB PAGES DEPLOYMENT & EMAIL ACTIVATION MODAL -->
-    <div id="githubModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-5">
+    <!-- BRAND ASSETS & TRANSPARENT LOGO DOWNLOAD MODAL -->
+    <div id="logoModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 max-h-[92vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-oaknavy-900 text-white flex items-center justify-center text-xl">
-                        <i class="fa-brands fa-github"></i>
+                    <div class="w-10 h-10 rounded-xl bg-oaknavy-900 text-oakamber-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-layer-group"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-extrabold text-oaknavy-900">Publish to GitHub Pages &amp; Activate Email</h3>
-                        <p class="text-xs text-slate-500">3-Minute Deployment Guide for Oakview Freight Services Ltd</p>
+                        <h3 class="text-lg font-extrabold text-oaknavy-900">Oakview Official Transparent Logo Kit</h3>
+                        <p class="text-xs text-slate-500">High-Resolution 2400&times;1800px Transparent PNG &amp; Print-Ready Vector SVG</p>
                     </div>
                 </div>
-                <button onclick="closeGithubModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">
+                <button onclick="closeLogoModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <div class="space-y-4 text-sm text-slate-700">
-                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                    <div class="font-bold text-oaknavy-900 mb-1">Step 1: Upload <code class="bg-slate-200 px-1.5 py-0.5 rounded text-xs">index.html</code> to GitHub</div>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        Create a new public repository on GitHub (e.g., <code class="text-oaknavy-800 font-semibold">oakview-freight-website</code>) and upload this single <code class="text-oaknavy-800 font-semibold">index.html</code> file. Because your Oakview logo is embedded as a lossless transparent SVG vector directly inside the code, you don't even need to upload separate image files!
-                    </p>
-                </div>
-
-                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                    <div class="font-bold text-oaknavy-900 mb-1">Step 2: Turn on GitHub Pages</div>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        In your GitHub repository, click <strong>Settings &rarr; Pages</strong> on the left sidebar. Under <strong>Branch</strong>, select <code class="text-oaknavy-800 font-semibold">main</code> (or <code class="text-oaknavy-800 font-semibold">master</code>) and click <strong>Save</strong>. Your live corporate website URL will be published within 60 seconds.
-                    </p>
-                </div>
-
-                <div class="p-4 rounded-xl bg-amber-50 border border-amber-200">
-                    <div class="font-bold text-oaknavy-900 mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-envelope-circle-check text-oakamber-600"></i>
-                        <span>Step 3: One-Time Email Activation for <code class="text-xs">oakviewfreight.official@gmail.com</code></span>
+            <div class="grid sm:grid-cols-2 gap-6">
+                <!-- Variant 1: Corporate Navy (For Light Backgrounds, Invoices, LinkedIn, Docs) -->
+                <div class="rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between bg-slate-50">
+                    <div class="p-6 flex items-center justify-center relative" style="background-image: linear-gradient(45deg, #e2e8f0 25%, transparent 25%), linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e2e8f0 75%), linear-gradient(-45deg, transparent 75%, #e2e8f0 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px;">
+                        <span class="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider bg-white/90 text-oaknavy-900 px-2.5 py-1 rounded shadow-sm">
+                            True Transparent Background
+                        </span>
+                        <div class="text-center py-4">
+                            <svg class="w-44 h-32 mx-auto" viewBox="0 0 260 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="44" y="132" width="38" height="16" rx="1.5" fill="#F59E0B"/>
+                                <rect x="84" y="132" width="38" height="16" rx="1.5" fill="#F59E0B"/>
+                                <rect x="68" y="114" width="52" height="16" rx="1.5" fill="#F59E0B"/>
+                                <rect x="138" y="132" width="38" height="16" rx="1.5" fill="#F59E0B"/>
+                                <rect x="178" y="132" width="36" height="16" rx="1.5" fill="#F59E0B"/>
+                                <rect x="138" y="114" width="48" height="16" rx="1.5" fill="#F59E0B"/>
+                                <path d="M114 149 C120 142, 122 124, 121 98 C120 82, 105 72, 86 64 C104 66, 118 75, 124 88 C126 70, 118 48, 102 32 C116 42, 125 58, 128 76 C130 56, 134 36, 132 16 C137 34, 136 56, 134 78 C142 60, 156 42, 172 30 C160 46, 146 66, 139 86 C152 74, 170 64, 192 62 C172 70, 152 82, 139 98 C137 122, 139 142, 146 149 Z" fill="#142A46"/>
+                                <g fill="#142A46" stroke="#142A46" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M122 96 C100 94, 72 98, 46 104 C62 94, 84 88, 106 89"/>
+                                    <path d="M92 92 C74 86, 56 88, 42 92"/>
+                                    <path d="M112 80 C88 72, 66 72, 48 76 C62 66, 82 64, 102 70"/>
+                                    <path d="M78 70 C64 60, 56 50, 52 44"/>
+                                    <path d="M118 68 C98 54, 80 46, 66 44 C82 40, 100 48, 116 60"/>
+                                    <path d="M96 50 C86 38, 82 28, 82 20"/>
+                                    <path d="M124 54 C112 38, 106 24, 108 14"/>
+                                    <path d="M128 44 C124 28, 124 16, 127 10"/>
+                                    <path d="M132 42 C136 26, 140 16, 142 11"/>
+                                    <path d="M135 54 C146 36, 154 22, 156 14"/>
+                                    <path d="M138 66 C156 48, 174 38, 190 36 C176 44, 158 56, 142 72"/>
+                                    <path d="M162 48 C172 36, 178 26, 180 20"/>
+                                    <path d="M142 80 C166 68, 190 66, 208 72 C192 74, 170 76, 146 86"/>
+                                    <path d="M178 72 C192 62, 202 52, 208 44"/>
+                                    <path d="M138 95 C164 90, 190 94, 214 104 C194 100, 166 96, 140 99"/>
+                                    <path d="M172 94 C190 86, 206 88, 218 92"/>
+                                </g>
+                                <path d="M18 144 L30 144 L30 133 L39 133 L42 148 L216 148 L225 136 L246 136 L232 164 C229 169, 223 171, 216 171 L188 171 L182 175 L78 175 L72 171 L40 171 C27 171, 20 162, 18 144 Z" fill="#142A46"/>
+                            </svg>
+                            <div class="font-logo text-2xl font-bold tracking-[0.08em] text-[#142A46] mt-1">OAKVIEW</div>
+                            <div class="text-[9px] font-semibold tracking-[0.28em] text-[#142A46]">FREIGHT SERVICES LTD</div>
+                        </div>
                     </div>
-                    <p class="text-xs text-slate-700 leading-relaxed">
-                        The contact form uses <strong>FormSubmit.co</strong> so static GitHub Pages can send real emails without a backend server. The very first time you submit a test inquiry on your live website, FormSubmit will send an activation link to <strong>oakviewfreight.official@gmail.com</strong>. Click <em>"Activate Form"</em> in that email once, and all future leads will arrive automatically in your inbox!
-                    </p>
+                    <div class="p-5 bg-white border-t border-slate-200 space-y-3">
+                        <div>
+                            <h4 class="font-bold text-sm text-oaknavy-900">Primary Corporate Logo (Navy &amp; Amber)</h4>
+                            <p class="text-xs text-slate-500">Best for light backgrounds, commercial invoices, email signatures &amp; social profiles.</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <button onclick="downloadOakviewLogo('navy', 'png')" class="bg-oaknavy-900 hover:bg-oaknavy-800 text-white font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-image text-oakamber-400"></i>
+                                <span>PNG (Transparent)</span>
+                            </button>
+                            <button onclick="downloadOakviewLogo('navy', 'svg')" class="bg-slate-100 hover:bg-slate-200 text-oaknavy-900 font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 border border-slate-300">
+                                <i class="fa-solid fa-bezier-curve"></i>
+                                <span>Vector SVG</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Variant 2: Light / White Edition (For Dark Backgrounds & Presentations) -->
+                <div class="rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between bg-oaknavy-950">
+                    <div class="p-6 flex items-center justify-center relative">
+                        <span class="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white px-2.5 py-1 rounded border border-white/15">
+                            Dark-Mode Transparent
+                        </span>
+                        <div class="text-center py-4">
+                            <svg class="w-44 h-32 mx-auto" viewBox="0 0 260 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="44" y="132" width="38" height="16" rx="1.5" fill="#F59E0B"/>
+                                <rect x="84" y="132" width="38" height="16" rx="1.5" fill="#F59E0B"/>
+                                <rect x="68" y="114" width="52" height="16" rx="1.5" fill="#F59E0B"/>
+                                <rect x="138" y="132" width="38" height="16" rx="1.5" fill="#F59E0B"/>
+                                <rect x="178" y="132" width="36" height="16" rx="1.5" fill="#F59E0B"/>
+                                <rect x="138" y="114" width="48" height="16" rx="1.5" fill="#F59E0B"/>
+                                <path d="M114 149 C120 142, 122 124, 121 98 C120 82, 105 72, 86 64 C104 66, 118 75, 124 88 C126 70, 118 48, 102 32 C116 42, 125 58, 128 76 C130 56, 134 36, 132 16 C137 34, 136 56, 134 78 C142 60, 156 42, 172 30 C160 46, 146 66, 139 86 C152 74, 170 64, 192 62 C172 70, 152 82, 139 98 C137 122, 139 142, 146 149 Z" fill="#FFFFFF"/>
+                                <g fill="#FFFFFF" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M122 96 C100 94, 72 98, 46 104 C62 94, 84 88, 106 89"/>
+                                    <path d="M92 92 C74 86, 56 88, 42 92"/>
+                                    <path d="M112 80 C88 72, 66 72, 48 76 C62 66, 82 64, 102 70"/>
+                                    <path d="M78 70 C64 60, 56 50, 52 44"/>
+                                    <path d="M118 68 C98 54, 80 46, 66 44 C82 40, 100 48, 116 60"/>
+                                    <path d="M96 50 C86 38, 82 28, 82 20"/>
+                                    <path d="M124 54 C112 38, 106 24, 108 14"/>
+                                    <path d="M128 44 C124 28, 124 16, 127 10"/>
+                                    <path d="M132 42 C136 26, 140 16, 142 11"/>
+                                    <path d="M135 54 C146 36, 154 22, 156 14"/>
+                                    <path d="M138 66 C156 48, 174 38, 190 36 C176 44, 158 56, 142 72"/>
+                                    <path d="M162 48 C172 36, 178 26, 180 20"/>
+                                    <path d="M142 80 C166 68, 190 66, 208 72 C192 74, 170 76, 146 86"/>
+                                    <path d="M178 72 C192 62, 202 52, 208 44"/>
+                                    <path d="M138 95 C164 90, 190 94, 214 104 C194 100, 166 96, 140 99"/>
+                                    <path d="M172 94 C190 86, 206 88, 218 92"/>
+                                </g>
+                                <path d="M18 144 L30 144 L30 133 L39 133 L42 148 L216 148 L225 136 L246 136 L232 164 C229 169, 223 171, 216 171 L188 171 L182 175 L78 175 L72 171 L40 171 C27 171, 20 162, 18 144 Z" fill="#FFFFFF"/>
+                            </svg>
+                            <div class="font-logo text-2xl font-bold tracking-[0.08em] text-white mt-1">OAKVIEW</div>
+                            <div class="text-[9px] font-semibold tracking-[0.28em] text-oakamber-400">FREIGHT SERVICES LTD</div>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-white border-t border-slate-200 space-y-3">
+                        <div>
+                            <h4 class="font-bold text-sm text-oaknavy-900">Reverse White Logo (For Dark Banners)</h4>
+                            <p class="text-xs text-slate-500">Best for dark LinkedIn banners, TikTok video watermarks &amp; pitch decks.</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <button onclick="downloadOakviewLogo('white', 'png')" class="bg-oakamber-500 hover:bg-oakamber-400 text-oaknavy-950 font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-image"></i>
+                                <span>PNG (Transparent)</span>
+                            </button>
+                            <button onclick="downloadOakviewLogo('white', 'svg')" class="bg-slate-100 hover:bg-slate-200 text-oaknavy-900 font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 border border-slate-300">
+                                <i class="fa-solid fa-bezier-curve"></i>
+                                <span>Vector SVG</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t border-slate-200 flex justify-end">
-                <button onclick="closeGithubModal()" class="bg-oaknavy-900 hover:bg-oaknavy-800 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl">
-                    Got It, Close Guide
+            <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+                <span> Exported PNG resolution: <strong>2400 &times; 1860 px</strong> (300 DPI Print &amp; Web Quality)</span>
+                <button onclick="closeLogoModal()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-xl">
+                    Done
                 </button>
             </div>
         </div>
@@ -1273,12 +1365,98 @@
             }
         }
 
-        // GitHub Guide Modal
-        function openGithubModal() {
-            document.getElementById('githubModal').classList.remove('hidden');
+        // Logo Download Modal & High-Res Transparent Exporter
+        function openLogoModal() {
+            document.getElementById('logoModal').classList.remove('hidden');
         }
-        function closeGithubModal() {
-            document.getElementById('githubModal').classList.add('hidden');
+        function closeLogoModal() {
+            document.getElementById('logoModal').classList.add('hidden');
+        }
+
+        function buildStandaloneSvg(theme) {
+            const primaryColor = theme === 'white' ? '#FFFFFF' : '#142A46';
+            const subtitleColor = theme === 'white' ? '#FBBF24' : '#142A46';
+            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" width="2400" height="1860" fill="none">
+    <g transform="translate(115, 20) scale(2.2)">
+        <rect x="44" y="132" width="38" height="16" rx="1.5" fill="#F59E0B"/>
+        <rect x="84" y="132" width="38" height="16" rx="1.5" fill="#F59E0B"/>
+        <rect x="68" y="114" width="52" height="16" rx="1.5" fill="#F59E0B"/>
+        <rect x="138" y="132" width="38" height="16" rx="1.5" fill="#F59E0B"/>
+        <rect x="178" y="132" width="36" height="16" rx="1.5" fill="#F59E0B"/>
+        <rect x="138" y="114" width="48" height="16" rx="1.5" fill="#F59E0B"/>
+        <g stroke="#D97706" stroke-width="1.5" opacity="0.65">
+            <line x1="52" y1="134" x2="52" y2="146"/><line x1="60" y1="134" x2="60" y2="146"/><line x1="68" y1="134" x2="68" y2="146"/><line x1="76" y1="134" x2="76" y2="146"/>
+            <line x1="92" y1="134" x2="92" y2="146"/><line x1="100" y1="134" x2="100" y2="146"/><line x1="108" y1="134" x2="108" y2="146"/>
+            <line x1="78" y1="116" x2="78" y2="128"/><line x1="88" y1="116" x2="88" y2="128"/><line x1="98" y1="116" x2="98" y2="128"/><line x1="108" y1="116" x2="108" y2="128"/>
+            <line x1="148" y1="116" x2="148" y2="128"/><line x1="158" y1="116" x2="158" y2="128"/><line x1="168" y1="116" x2="168" y2="128"/><line x1="178" y1="116" x2="178" y2="128"/>
+            <line x1="146" y1="134" x2="146" y2="146"/><line x1="156" y1="134" x2="156" y2="146"/><line x1="166" y1="134" x2="166" y2="146"/>
+            <line x1="186" y1="134" x2="186" y2="146"/><line x1="196" y1="134" x2="196" y2="146"/><line x1="206" y1="134" x2="206" y2="146"/>
+        </g>
+        <path d="M114 149 C120 142, 122 124, 121 98 C120 82, 105 72, 86 64 C104 66, 118 75, 124 88 C126 70, 118 48, 102 32 C116 42, 125 58, 128 76 C130 56, 134 36, 132 16 C137 34, 136 56, 134 78 C142 60, 156 42, 172 30 C160 46, 146 66, 139 86 C152 74, 170 64, 192 62 C172 70, 152 82, 139 98 C137 122, 139 142, 146 149 Z" fill="${primaryColor}"/>
+        <g fill="${primaryColor}" stroke="${primaryColor}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M122 96 C100 94, 72 98, 46 104 C62 94, 84 88, 106 89"/><path d="M92 92 C74 86, 56 88, 42 92"/>
+            <path d="M112 80 C88 72, 66 72, 48 76 C62 66, 82 64, 102 70"/><path d="M78 70 C64 60, 56 50, 52 44"/>
+            <path d="M118 68 C98 54, 80 46, 66 44 C82 40, 100 48, 116 60"/><path d="M96 50 C86 38, 82 28, 82 20"/>
+            <path d="M124 54 C112 38, 106 24, 108 14"/><path d="M128 44 C124 28, 124 16, 127 10"/>
+            <path d="M132 42 C136 26, 140 16, 142 11"/><path d="M135 54 C146 36, 154 22, 156 14"/>
+            <path d="M138 66 C156 48, 174 38, 190 36 C176 44, 158 56, 142 72"/><path d="M162 48 C172 36, 178 26, 180 20"/>
+            <path d="M142 80 C166 68, 190 66, 208 72 C192 74, 170 76, 146 86"/><path d="M178 72 C192 62, 202 52, 208 44"/>
+            <path d="M138 95 C164 90, 190 94, 214 104 C194 100, 166 96, 140 99"/><path d="M172 94 C190 86, 206 88, 218 92"/>
+            <circle cx="48" cy="103" r="3.5"/><circle cx="43" cy="91" r="3.5"/><circle cx="49" cy="76" r="4"/><circle cx="53" cy="45" r="3.5"/>
+            <circle cx="67" cy="44" r="4"/><circle cx="82" cy="21" r="4"/><circle cx="96" cy="28" r="3.5"/><circle cx="108" cy="15" r="4"/>
+            <circle cx="127" cy="10" r="4"/><circle cx="142" cy="11" r="4"/><circle cx="156" cy="15" r="4"/><circle cx="168" cy="28" r="3.5"/>
+            <circle cx="180" cy="21" r="4"/><circle cx="190" cy="36" r="4"/><circle cx="207" cy="45" r="3.5"/><circle cx="208" cy="72" r="4"/>
+            <circle cx="217" cy="91" r="3.5"/><circle cx="213" cy="103" r="3.5"/>
+        </g>
+        <path d="M18 144 L30 144 L30 133 L39 133 L42 148 L216 148 L225 136 L246 136 L232 164 C229 169, 223 171, 216 171 L188 171 L182 175 L78 175 L72 171 L40 171 C27 171, 20 162, 18 144 Z" fill="${primaryColor}"/>
+    </g>
+    <text x="404" y="495" text-anchor="middle" font-family="Cinzel, Georgia, 'Times New Roman', serif" font-weight="700" font-size="76" letter-spacing="6" fill="${primaryColor}">OAKVIEW</text>
+    <text x="408" y="542" text-anchor="middle" font-family="'Plus Jakarta Sans', Inter, Arial, sans-serif" font-weight="600" font-size="22" letter-spacing="7.5" fill="${subtitleColor}">FREIGHT SERVICES LTD</text>
+</svg>`;
+        }
+
+        function downloadOakviewLogo(theme, format) {
+            const svgString = buildStandaloneSvg(theme);
+            const fileName = `Oakview-Freight-Logo-Transparent-${theme}`;
+
+            if (format === 'svg') {
+                const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${fileName}.svg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                return;
+            }
+
+            // Export as High-Resolution 2400x1860 Transparent PNG
+            const canvas = document.createElement('canvas');
+            canvas.width = 2400;
+            canvas.height = 1860;
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+
+            img.onload = function () {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, 2400, 1860);
+                URL.revokeObjectURL(url);
+                canvas.toBlob(function (pngBlob) {
+                    const pngUrl = URL.createObjectURL(pngBlob);
+                    const link = document.createElement('a');
+                    link.href = pngUrl;
+                    link.download = `${fileName}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(pngUrl);
+                }, 'image/png');
+            };
+            img.src = url;
         }
 
         // Interactive Estimator State & Logic
