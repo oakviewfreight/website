@@ -3,1358 +3,912 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Oakview Freight — Marketing & Operations Command Center</title>
-  <!-- Tailwind CSS -->
+  <title>Oakview Freight Services Ltd. — Marketing & Operations Command Center</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js for Lead Source Analytics -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Inter Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
-          colors: {
-            navy: {
-              DEFAULT: '#1B365D',
-              dark: '#122542',
-              light: '#274B7E'
-            },
-            teal: {
-              slate: '#2C5E7A',
-              light: '#3A799C'
-            }
-          }
-        }
-      }
-    };
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
+    .tab-active { border-bottom: 2px solid #0284c7; color: #0284c7; font-weight: 600; }
+    .badge-hot { background-color: #fee2e2; color: #991b1b; }
+    .badge-warm { background-color: #fef3c7; color: #92400e; }
+    .badge-cold { background-color: #e0f2fe; color: #075985; }
+    .status-completed { background-color: #dcfce7; color: #166534; }
+    .status-inprogress { background-color: #fef3c7; color: #92400e; }
+    .status-pending { background-color: #f1f5f9; color: #334155; }
+    .status-blocked { background-color: #fee2e2; color: #991b1b; }
+  </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col">
 
   <!-- ===================================================================== -->
-  <!-- 1. PIN / ACCESS LOCK SCREEN                                           -->
+  <!-- SECURE SERVER-VERIFIED LOGIN GATEWAY (NO HARDCODED PASSWORD IN HTML)  -->
   <!-- ===================================================================== -->
-  <div id="lockScreen" class="fixed inset-0 z-50 bg-navy flex items-center justify-center p-4">
+  <div id="loginOverlay" class="fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border border-slate-200">
       <div class="flex items-center gap-3 mb-6">
-        <div class="w-12 h-12 rounded-xl bg-navy text-white flex items-center justify-center font-bold text-xl shadow">
-          OF
-        </div>
+        <div class="w-11 h-11 rounded-xl bg-sky-700 text-white flex items-center justify-center font-bold text-lg shadow">OF</div>
         <div>
-          <h1 class="text-xl font-bold text-navy leading-tight">Oakview Freight Services</h1>
-          <p class="text-xs text-slate-500 font-medium">Marketing &amp; Operations Command Center</p>
+          <h1 class="text-lg font-bold text-slate-900">Oakview Freight Command Center</h1>
+          <p class="text-xs text-slate-500">UK/EU Logistics &amp; India Lead Generation Portal</p>
         </div>
       </div>
 
-      <p class="text-sm text-slate-600 mb-5">
-        Enter your workspace PIN to access the 90-Day Checklist, Multi-Channel Lead Pipeline, and India-to-UK TikTok Queue.
-      </p>
-
-      <form id="pinForm" class="space-y-4">
+      <div class="space-y-4">
         <div>
-          <label for="pinInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
-            Workspace PIN
-          </label>
-          <input
-            id="pinInput"
-            type="password"
-            inputmode="numeric"
-            placeholder="••••"
-            class="w-full px-4 py-3 rounded-xl border border-slate-300 text-center text-2xl tracking-[0.4em] font-bold text-navy focus:outline-none focus:ring-2 focus:ring-teal-slate"
-            required
-          />
-          <p id="pinError" class="text-xs text-rose-600 mt-1.5 hidden">Invalid PIN. Default demo PIN is 2026.</p>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Google Apps Script Web App URL</label>
+          <input id="loginScriptUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec"
+            class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-600" />
+          <p class="text-[11px] text-slate-400 mt-1">Saved locally in your browser once entered. Verified against your Google Sheet 'Password' tab.</p>
         </div>
 
-        <button
-          type="submit"
-          class="w-full py-3 px-4 rounded-xl bg-navy hover:bg-navy-dark text-white font-semibold text-sm transition shadow-sm"
-        >
-          Unlock Command Center
-        </button>
-      </form>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Admin / Client Password</label>
+          <input id="loginPassword" type="password" placeholder="Enter password from 'Password' tab"
+            onkeydown="if(event.key==='Enter') handleServerLogin()"
+            class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-600" />
+        </div>
 
-      <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-        <span>Default Demo PIN: <strong class="text-slate-600">2026</strong></span>
-        <span>UK &bull; EU &bull; India Ops</span>
+        <div id="loginError" class="hidden text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg p-2.5"></div>
+
+        <button id="loginBtn" onclick="handleServerLogin()"
+          class="w-full py-2.5 px-4 bg-sky-700 hover:bg-sky-800 text-white font-semibold text-sm rounded-lg shadow transition flex items-center justify-center gap-2">
+          <span>Unlock Command Center</span>
+        </button>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+          <span>Zero passwords stored in GitHub source</span>
+          <button onclick="enterOfflineDemoMode()" class="text-sky-700 hover:underline font-medium">Offline Preview Mode &rarr;</button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- 2. TOAST NOTIFICATION BANNER                                          -->
+  <!-- TOP NAVIGATION BAR                                                    -->
   <!-- ===================================================================== -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden transform transition-all duration-200">
-    <div class="bg-navy text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-medium border border-white/10">
-      <span id="toastIcon" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-      <span id="toastMsg">Action completed</span>
-    </div>
-  </div>
-
-  <!-- ===================================================================== -->
-  <!-- 3. MAIN APPLICATION SHELL                                             -->
-  <!-- ===================================================================== -->
-  <div id="appShell" class="hidden flex-1 flex flex-col">
-
-    <!-- Top Navigation Header -->
-    <header class="bg-navy text-white shadow-md sticky top-0 z-30">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-teal-slate text-white flex items-center justify-center font-bold text-lg border border-white/20">
-            OF
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h1 class="text-base sm:text-lg font-bold tracking-tight">Oakview Freight Command Center</h1>
-              <span id="connectionBadge" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/30">
-                Demo Mode (Local)
-              </span>
-            </div>
-            <p class="text-xs text-slate-300">India-to-UK/EU Amazon FBA &amp; TikTok Shop Lead Engine</p>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button
-            onclick="syncFromGoogleSheets()"
-            id="syncBtn"
-            class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium text-white transition flex items-center gap-1.5"
-            title="Sync with Google Apps Script"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            <span>Sync Sheet</span>
-          </button>
-          <button
-            onclick="switchTab('settings')"
-            class="px-3 py-2 rounded-xl bg-teal-slate hover:bg-teal-light text-xs font-medium text-white transition"
-          >
-            API Settings
-          </button>
-          <button
-            onclick="lockApp()"
-            class="px-3 py-2 rounded-xl bg-white/10 hover:bg-rose-600 text-xs font-medium text-white transition"
-            title="Lock Workspace"
-          >
-            Lock
-          </button>
+  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-sky-600 flex items-center justify-center font-bold text-sm">OF</div>
+        <div>
+          <div class="font-bold text-sm sm:text-base tracking-tight">Oakview Freight Services Ltd.</div>
+          <div class="text-[11px] text-slate-300">90-Day Marketing, Lead Pipeline &amp; UK Handover System</div>
         </div>
       </div>
-    </header>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 flex-1">
+      <div class="flex items-center gap-3">
+        <span id="syncBadge" class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span id="userDisplay">Connected</span>
+        </span>
+        <button onclick="syncAllFromSheet()" title="Refresh Data from Google Sheet"
+          class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg transition">
+          &#8635; Sync Sheet
+        </button>
+        <button onclick="logoutSession()"
+          class="px-3 py-1.5 text-xs font-medium bg-red-600/90 hover:bg-red-700 text-white rounded-lg transition">
+          Lock
+        </button>
+      </div>
+    </div>
 
-      <!-- ================================================================= -->
-      <!-- TOP KPI SUMMARY BAR                                               -->
-      <!-- ================================================================= -->
-      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- KPI 1: 90-Day Checklist Progress -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">90-Day Plan Progress</span>
-            <span class="text-xs font-bold px-2 py-0.5 rounded-lg bg-navy/10 text-navy" id="kpiChecklistCount">0 / 0</span>
+    <!-- SUB-NAV TABS -->
+    <div class="bg-white text-slate-700 border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-6 overflow-x-auto text-sm">
+        <button onclick="switchTab('overview')" id="tab-overview" class="py-3 whitespace-nowrap tab-active">Executive Overview</button>
+        <button onclick="switchTab('checklist')" id="tab-checklist" class="py-3 whitespace-nowrap hover:text-sky-700">90-Day Daily Checklist</button>
+        <button onclick="switchTab('leads')" id="tab-leads" class="py-3 whitespace-nowrap hover:text-sky-700">Inbound Leads &amp; Handover</button>
+        <button onclick="switchTab('content')" id="tab-content" class="py-3 whitespace-nowrap hover:text-sky-700">TikTok &amp; Social Bridge</button>
+        <button onclick="switchTab('ai')" id="tab-ai" class="py-3 whitespace-nowrap hover:text-sky-700">AI Outreach &amp; Script Studio</button>
+        <button onclick="switchTab('settings')" id="tab-settings" class="py-3 whitespace-nowrap hover:text-sky-700">Setup &amp; Webhook URL</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN CONTENT WORKSPACE                                                -->
+  <!-- ===================================================================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- TAB 1: EXECUTIVE OVERVIEW -->
+    <section id="view-overview" class="space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500 uppercase">90-Day Plan Completion</div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <div id="kpiCompletionPct" class="text-2xl font-bold text-slate-900">0.0%</div>
+            <div id="kpiCompletionCount" class="text-xs font-medium text-sky-700">0 / 90 Days</div>
           </div>
-          <div class="mt-3 flex items-baseline gap-2">
-            <span id="kpiChecklistPct" class="text-3xl font-bold text-navy">0%</span>
-            <span class="text-xs text-slate-500">tasks completed</span>
-          </div>
-          <div class="mt-3 w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-            <div id="kpiChecklistBar" class="bg-teal-slate h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+          <div class="w-full bg-slate-100 h-2 rounded-full mt-3 overflow-hidden">
+            <div id="kpiProgressBar" class="bg-sky-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
           </div>
         </div>
 
-        <!-- KPI 2: Total Inbound Leads -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Inbound Leads</span>
-            <span class="text-xs font-medium text-teal-slate">All Channels</span>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500 uppercase">Total Inbound Leads</div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <div id="kpiTotalLeads" class="text-2xl font-bold text-slate-900">0</div>
+            <div id="kpiHotLeads" class="text-xs font-semibold text-red-600">0 Hot Leads</div>
           </div>
-          <div class="mt-3 flex items-baseline gap-2">
-            <span id="kpiTotalLeads" class="text-3xl font-bold text-navy">0</span>
-            <span class="text-xs text-slate-500">captured enquiries</span>
+          <div class="text-[11px] text-slate-400 mt-3">Website, LinkedIn, Meta &amp; TikTok</div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500 uppercase">Handed Over to Nilesh</div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <div id="kpiHandedOver" class="text-2xl font-bold text-emerald-700">0</div>
+            <div class="text-xs font-medium text-slate-500">UK Commercial Closing</div>
           </div>
-          <div id="kpiLeadChannelMini" class="mt-3 flex flex-wrap gap-1.5 text-[11px] font-medium text-slate-600">
-            <!-- Populated dynamically -->
+          <div class="text-[11px] text-slate-400 mt-3">Client: Nilesh Vallabh Mistry (UK)</div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500 uppercase">TikTok UK Content Bridge</div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <div id="kpiTiktokReady" class="text-2xl font-bold text-amber-600">0</div>
+            <div id="kpiTiktokPublished" class="text-xs font-medium text-emerald-700">0 Published</div>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-3">Target: 10 Videos in 90 Days</div>
+        </div>
+      </div>
+
+      <!-- Phase Progress & Next Pending Tasks -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Phase Breakdown</h2>
+          <div id="phaseProgressContainer" class="space-y-4 text-sm"></div>
+          <div class="pt-4 border-t border-slate-100 text-xs text-slate-500 space-y-1">
+            <div><strong>Retainer:</strong> &pound;350/month (&pound;1,050 / 3 Months)</div>
+            <div><strong>Target ICP:</strong> Indian Amazon FBA &amp; TikTok Shop Exporters</div>
+            <div><strong>Core Services:</strong> IOR/DDP, Customs, UK Final-Mile</div>
           </div>
         </div>
 
-        <!-- KPI 3: Qualified Leads Ready for Nilesh -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Ready for Nilesh (UK)</span>
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">Qualified</span>
+        <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Immediate Next Action Items</h2>
+            <button onclick="switchTab('checklist')" class="text-xs font-semibold text-sky-700 hover:underline">View All 90 Days &rarr;</button>
           </div>
-          <div class="mt-3 flex items-baseline gap-2">
-            <span id="kpiQualifiedLeads" class="text-3xl font-bold text-emerald-700">0</span>
-            <span class="text-xs text-slate-500">UK pricing &amp; onboarding</span>
-          </div>
-          <p class="mt-3 text-xs text-slate-500">IOR / DDP &amp; UK final-mile prospects</p>
+          <div id="upcomingTasksList" class="divide-y divide-slate-100"></div>
         </div>
+      </div>
+    </section>
 
-        <!-- KPI 4: TikTok Queue Status -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">TikTok UK Bridge</span>
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-lg bg-sky-50 text-teal-slate border border-sky-200">India &rarr; UK</span>
-          </div>
-          <div class="mt-3 flex items-baseline gap-2">
-            <span id="kpiTikTokReady" class="text-3xl font-bold text-teal-slate">0</span>
-            <span class="text-xs text-slate-500">ready for UK upload</span>
-          </div>
-          <p id="kpiTikTokSub" class="mt-3 text-xs text-slate-500">0 published &bull; 0 in draft</p>
+    <!-- TAB 2: 90-DAY DAILY CHECKLIST -->
+    <section id="view-checklist" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="filterMonth" onchange="renderChecklist()" class="text-xs border border-slate-300 rounded-lg px-3 py-2 bg-white">
+            <option value="ALL">All Months (Days 1–90)</option>
+            <option value="Month 1">Month 1: Research &amp; Setup</option>
+            <option value="Month 2">Month 2: Outreach &amp; Lead Gen</option>
+            <option value="Month 3">Month 3: Optimisation &amp; Review</option>
+          </select>
+          <select id="filterOwner" onchange="renderChecklist()" class="text-xs border border-slate-300 rounded-lg px-3 py-2 bg-white">
+            <option value="ALL">All Owners</option>
+            <option value="Jalal B">Jalal B (India)</option>
+            <option value="Nilesh Mistry">Nilesh Mistry (UK)</option>
+            <option value="Joint">Joint</option>
+          </select>
+          <select id="filterStatus" onchange="renderChecklist()" class="text-xs border border-slate-300 rounded-lg px-3 py-2 bg-white">
+            <option value="ALL">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Blocked">Blocked</option>
+          </select>
         </div>
-      </section>
+        <input id="searchTask" oninput="renderChecklist()" type="text" placeholder="Search task, channel, or day..."
+          class="text-xs border border-slate-300 rounded-lg px-3 py-2 w-full sm:w-64" />
+      </div>
 
-      <!-- ================================================================= -->
-      <!-- NAVIGATION TABS                                                   -->
-      <!-- ================================================================= -->
-      <nav class="bg-white rounded-2xl p-1.5 shadow-sm border border-slate-200/80 flex flex-wrap gap-1.5" aria-label="Workspace Tabs">
-        <button
-          onclick="switchTab('checklist')"
-          id="tabBtn-checklist"
-          class="tab-btn flex-1 min-w-[150px] py-2.5 px-4 rounded-xl text-sm font-semibold transition text-center bg-navy text-white shadow-sm"
-        >
-          1. 90-Day Daily Checklist
-        </button>
-        <button
-          onclick="switchTab('leads')"
-          id="tabBtn-leads"
-          class="tab-btn flex-1 min-w-[150px] py-2.5 px-4 rounded-xl text-sm font-semibold transition text-center text-slate-600 hover:bg-slate-100"
-        >
-          2. Multi-Channel Lead Tracker
-        </button>
-        <button
-          onclick="switchTab('content')"
-          id="tabBtn-content"
-          class="tab-btn flex-1 min-w-[150px] py-2.5 px-4 rounded-xl text-sm font-semibold transition text-center text-slate-600 hover:bg-slate-100"
-        >
-          3. TikTok &amp; Social Queue
-        </button>
-        <button
-          onclick="switchTab('settings')"
-          id="tabBtn-settings"
-          class="tab-btn flex-1 min-w-[150px] py-2.5 px-4 rounded-xl text-sm font-semibold transition text-center text-slate-600 hover:bg-slate-100"
-        >
-          4. Settings &amp; Setup Guide
-        </button>
-      </nav>
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200 text-xs">
+            <thead class="bg-slate-50 text-slate-600 font-semibold uppercase">
+              <tr>
+                <th class="px-4 py-3 text-center w-16">Day</th>
+                <th class="px-4 py-3 text-left w-28">Phase</th>
+                <th class="px-4 py-3 text-left w-40">Workstream</th>
+                <th class="px-4 py-3 text-left">Actionable Task</th>
+                <th class="px-4 py-3 text-center w-32">Owner</th>
+                <th class="px-4 py-3 text-center w-36">Status</th>
+              </tr>
+            </thead>
+            <tbody id="checklistTableBody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-      <!-- ================================================================= -->
-      <!-- TAB 1: 90-DAY DAILY CHECKLIST                                     -->
-      <!-- ================================================================= -->
-      <section id="tab-checklist" class="tab-panel space-y-4">
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+    <!-- TAB 3: INBOUND LEADS & NILESH HANDOVER -->
+    <section id="view-leads" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Add New Lead Form -->
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-fit">
+          <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Log / Capture New Lead</h2>
+          <form onsubmit="submitNewLead(event)" class="space-y-3 text-xs">
             <div>
-              <h2 class="text-lg font-bold text-navy">90-Day Execution Checklist</h2>
-              <p class="text-xs text-slate-500">Track daily tasks across Month 1 (Setup), Month 2 (Lead Gen), and Month 3 (Optimisation). Changes sync automatically.</p>
-            </div>
-
-            <!-- Filters -->
-            <div class="flex flex-wrap items-center gap-2">
-              <select id="filterMonth" onchange="renderChecklist()" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-teal-slate">
-                <option value="ALL">All Months (Days 1–90)</option>
-                <option value="Month 1">Month 1: Research &amp; Setup</option>
-                <option value="Month 2">Month 2: Outreach &amp; Leads</option>
-                <option value="Month 3">Month 3: Optimisation</option>
-              </select>
-
-              <select id="filterOwner" onchange="renderChecklist()" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-teal-slate">
-                <option value="ALL">All Owners</option>
-                <option value="Jalal B">Jalal B (India)</option>
-                <option value="Nilesh Mistry">Nilesh Mistry (UK)</option>
-                <option value="Joint">Joint (Both)</option>
-              </select>
-
-              <select id="filterStatus" onchange="renderChecklist()" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-teal-slate">
-                <option value="ALL">All Statuses</option>
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-                <option value="Blocked">Blocked</option>
+              <label class="block font-semibold text-slate-600 mb-1">Source Channel</label>
+              <select id="leadSource" class="w-full border border-slate-300 rounded-lg px-3 py-2">
+                <option value="Website">Website (oakviewfreight.com)</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Meta (FB/IG)">Meta (Facebook / Instagram)</option>
+                <option value="TikTok">TikTok UK</option>
+                <option value="Direct / WhatsApp">Direct / WhatsApp</option>
               </select>
             </div>
-          </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Exporter / Company Name *</label>
+              <input id="leadCompany" required type="text" placeholder="e.g., SpiceRoute Naturals Pvt Ltd" class="w-full border border-slate-300 rounded-lg px-3 py-2" />
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">Contact Person *</label>
+                <input id="leadContact" required type="text" placeholder="Name & Role" class="w-full border border-slate-300 rounded-lg px-3 py-2" />
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">Intent Score</label>
+                <select id="leadIntent" class="w-full border border-slate-300 rounded-lg px-3 py-2">
+                  <option value="Hot">Hot (Ready to Ship)</option>
+                  <option value="Warm" selected>Warm (Exploring)</option>
+                  <option value="Cold">Cold (Early Info)</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Email / WhatsApp *</label>
+              <input id="leadEmailPhone" required type="text" placeholder="+91 98XXX XXXXX / email@company.in" class="w-full border border-slate-300 rounded-lg px-3 py-2" />
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Product Category &amp; Target Marketplace</label>
+              <input id="leadProduct" type="text" placeholder="e.g., Herbal Skincare -> Amazon UK FBA" class="w-full border border-slate-300 rounded-lg px-3 py-2" />
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Required UK/EU Service</label>
+              <select id="leadService" class="w-full border border-slate-300 rounded-lg px-3 py-2">
+                <option value="DDP / Importer of Record (IOR)">DDP / Importer of Record (IOR)</option>
+                <option value="UK/EU Customs Clearance">UK/EU Customs Clearance</option>
+                <option value="UK Final-Mile & Warehousing">UK Final-Mile &amp; Warehousing</option>
+                <option value="Customs Consulting">Customs Consulting</option>
+                <option value="Full End-to-End Package">Full End-to-End Package</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Qualification Notes</label>
+              <textarea id="leadNotes" rows="2" placeholder="Monthly pallet/carton volume, EORI status..." class="w-full border border-slate-300 rounded-lg px-3 py-2"></textarea>
+            </div>
+            <button type="submit" class="w-full py-2.5 bg-sky-700 hover:bg-sky-800 text-white font-semibold rounded-lg shadow transition">
+              + Save Lead &amp; Sync to Sheet
+            </button>
+          </form>
+        </div>
 
-          <!-- Search Input -->
-          <div class="mt-4 mb-3">
-            <input
-              id="searchChecklist"
-              type="text"
-              oninput="renderChecklist()"
-              placeholder="Search tasks by keyword, platform (LinkedIn, TikTok, Website), or day..."
-              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-slate"
-            />
+        <!-- Leads Table & One-Click Handover -->
+        <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-slate-200 flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Inbound Lead Pipeline</h2>
+            <span class="text-xs text-slate-500">Click &ldquo;Copy Handover Brief&rdquo; to escalate qualified leads to Nilesh</span>
           </div>
-
-          <!-- Responsive Table -->
           <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-50">
-                  <th class="py-3 px-3 rounded-tl-xl">Day</th>
-                  <th class="py-3 px-3">Phase</th>
-                  <th class="py-3 px-3">Daily Deliverable / Action</th>
-                  <th class="py-3 px-3">Platform</th>
-                  <th class="py-3 px-3">Owner</th>
-                  <th class="py-3 px-3 rounded-tr-xl">Status (Click to Update)</th>
+            <table class="min-w-full divide-y divide-slate-200 text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-semibold uppercase">
+                <tr>
+                  <th class="px-4 py-3 text-left">Company &amp; Contact</th>
+                  <th class="px-4 py-3 text-center">Source</th>
+                  <th class="px-4 py-3 text-left">Service / Niche</th>
+                  <th class="px-4 py-3 text-center">Intent</th>
+                  <th class="px-4 py-3 text-center">UK Handover</th>
                 </tr>
               </thead>
-              <tbody id="checklistTableBody" class="divide-y divide-slate-100 text-sm">
-                <!-- Rows injected via JS -->
-              </tbody>
+              <tbody id="leadsTableBody" class="divide-y divide-slate-100"></tbody>
             </table>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ================================================================= -->
-      <!-- TAB 2: MULTI-CHANNEL LEAD TRACKER                                 -->
-      <!-- ================================================================= -->
-      <section id="tab-leads" class="tab-panel hidden space-y-5">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <!-- Left 2 Columns: Lead Pipeline Table -->
-          <div class="lg:col-span-2 bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex flex-col">
-            <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
-              <div>
-                <h2 class="text-lg font-bold text-navy">Multi-Channel Lead Pipeline</h2>
-                <p class="text-xs text-slate-500">Indian exporters &amp; e-commerce sellers captured across Website, LinkedIn, Meta &amp; TikTok.</p>
-              </div>
-              <button
-                onclick="openLeadModal()"
-                class="px-4 py-2.5 rounded-xl bg-navy hover:bg-navy-dark text-white text-xs font-semibold shadow-sm transition"
-              >
-                + Add New Lead
-              </button>
-            </div>
-
-            <!-- Source Filter Pills -->
-            <div class="flex flex-wrap items-center gap-2 my-4">
-              <button onclick="setLeadSourceFilter('ALL')" data-source="ALL" class="lead-src-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-navy text-white">All Sources</button>
-              <button onclick="setLeadSourceFilter('Website')" data-source="Website" class="lead-src-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Website</button>
-              <button onclick="setLeadSourceFilter('LinkedIn')" data-source="LinkedIn" class="lead-src-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">LinkedIn</button>
-              <button onclick="setLeadSourceFilter('Meta')" data-source="Meta" class="lead-src-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Meta (FB/IG)</button>
-              <button onclick="setLeadSourceFilter('TikTok')" data-source="TikTok" class="lead-src-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">TikTok</button>
-            </div>
-
-            <div class="overflow-x-auto flex-1">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-50">
-                    <th class="py-3 px-3 rounded-tl-xl">Exporter / Contact</th>
-                    <th class="py-3 px-3">Source</th>
-                    <th class="py-3 px-3">Service Needed</th>
-                    <th class="py-3 px-3">Stage</th>
-                    <th class="py-3 px-3 rounded-tr-xl text-right">UK Handover</th>
-                  </tr>
-                </thead>
-                <tbody id="leadsTableBody" class="divide-y divide-slate-100 text-sm">
-                  <!-- Leads injected via JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Right Column: Lead Source Breakdown Chart -->
-          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex flex-col justify-between">
-            <div>
-              <h3 class="text-base font-bold text-navy">Leads by Acquisition Channel</h3>
-              <p class="text-xs text-slate-500 mt-0.5">Live channel distribution across active pipeline</p>
-              <div class="mt-5 relative h-60 flex items-center justify-center">
-                <canvas id="leadSourceChart"></canvas>
-              </div>
-            </div>
-
-            <div class="mt-5 pt-4 border-t border-slate-100 space-y-2 text-xs text-slate-600">
-              <div class="flex justify-between">
-                <span>Primary Target Channels:</span>
-                <span class="font-semibold text-navy">Amazon FBA &amp; TikTok Shop</span>
-              </div>
-              <div class="flex justify-between">
-                <span>UK Commercial Escalation:</span>
-                <span class="font-semibold text-teal-slate">Nilesh Mistry</span>
-              </div>
-            </div>
-          </div>
+    <!-- TAB 4: TIKTOK & SOCIAL BRIDGE -->
+    <section id="view-content" class="hidden space-y-6">
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 flex items-start gap-3">
+        <span class="font-bold text-base">&#9888;</span>
+        <div>
+          <strong>India-to-UK TikTok Operating Protocol:</strong> Because TikTok is restricted in India, prepare scripts, edited MP4s (via Google Drive link), and captions here. Mark status as <strong>&ldquo;Ready for UK&rdquo;</strong> and click <strong>&ldquo;Notify Nilesh&rdquo;</strong> so he can publish directly from the UK.
         </div>
-      </section>
+      </div>
 
-      <!-- ================================================================= -->
-      <!-- TAB 3: TIKTOK & SOCIAL CONTENT QUEUE (INDIA -> UK BRIDGE)         -->
-      <!-- ================================================================= -->
-      <section id="tab-content" class="tab-panel hidden space-y-5">
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
-            <div>
-              <h2 class="text-lg font-bold text-navy">TikTok &amp; Social Content Queue (India &rarr; UK Bridge)</h2>
-              <p class="text-xs text-slate-500">
-                Prepare TikTok-ready videos in India, mark <strong>Ready for Nilesh</strong>, and send one-click email briefs for UK publishing.
-              </p>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-fit">
+          <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Queue New Social / TikTok Post</h2>
+          <form onsubmit="submitNewContent(event)" class="space-y-3 text-xs">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">Target Day / Date</label>
+                <input id="cntDate" type="text" placeholder="e.g., Day 23" class="w-full border border-slate-300 rounded-lg px-3 py-2" />
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">Platform</label>
+                <select id="cntPlatform" class="w-full border border-slate-300 rounded-lg px-3 py-2">
+                  <option value="TikTok UK">TikTok UK (Nilesh Posts)</option>
+                  <option value="LinkedIn / FB / IG">LinkedIn / FB / IG</option>
+                  <option value="LinkedIn">LinkedIn Only</option>
+                  <option value="Instagram / Facebook">Instagram / Facebook</option>
+                </select>
+              </div>
             </div>
-            <button
-              onclick="openContentModal()"
-              class="px-4 py-2.5 rounded-xl bg-teal-slate hover:bg-teal-light text-white text-xs font-semibold shadow-sm transition"
-            >
-              + Add Content Asset
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Topic / Video Hook *</label>
+              <input id="cntTopic" required type="text" placeholder="e.g., 3 Customs Mistakes Indian Sellers Make" class="w-full border border-slate-300 rounded-lg px-3 py-2" />
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Caption &amp; Hashtags</label>
+              <textarea id="cntCaption" rows="3" placeholder="Write post copy & hashtags..." class="w-full border border-slate-300 rounded-lg px-3 py-2"></textarea>
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Google Drive Asset Link (MP4 / Graphic)</label>
+              <input id="cntDrive" type="url" placeholder="https://drive.google.com/..." class="w-full border border-slate-300 rounded-lg px-3 py-2" />
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Status</label>
+              <select id="cntStatus" class="w-full border border-slate-300 rounded-lg px-3 py-2">
+                <option value="Ready for UK">Ready for UK (Notify Nilesh)</option>
+                <option value="Drafting">Drafting</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Published">Published</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full py-2.5 bg-sky-700 hover:bg-sky-800 text-white font-semibold rounded-lg shadow transition">
+              + Add to Content Queue
             </button>
-          </div>
-
-          <div id="contentCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
-            <!-- Content cards injected via JS -->
-          </div>
+          </form>
         </div>
-      </section>
 
-      <!-- ================================================================= -->
-      <!-- TAB 4: SETTINGS & SETUP GUIDE                                     -->
-      <!-- ================================================================= -->
-      <section id="tab-settings" class="tab-panel hidden space-y-5">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <!-- Connection Settings Form -->
-          <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-4">
-            <div>
-              <h2 class="text-lg font-bold text-navy">Google Apps Script &amp; Security Settings</h2>
-              <p class="text-xs text-slate-500 mt-1">
-                Connect this dashboard to your master Google Sheet so all checklist updates, leads, and TikTok assets sync in real time.
-              </p>
-            </div>
-
-            <form id="settingsForm" class="space-y-4">
-              <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
-                  Google Apps Script Web App URL
-                </label>
-                <input
-                  id="settingApiUrl"
-                  type="url"
-                  placeholder="https://script.google.com/macros/s/AKfycb.../exec"
-                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-slate"
-                />
-              </div>
-
-              <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
-                  API Secret Token
-                </label>
-                <input
-                  id="settingApiToken"
-                  type="text"
-                  placeholder="e.g., OAKVIEW_SECRET_2026"
-                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-slate"
-                />
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
-                    Workspace Lock PIN
-                  </label>
-                  <input
-                    id="settingPin"
-                    type="text"
-                    maxlength="8"
-                    value="2026"
-                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-slate"
-                  />
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
-                    Nilesh Handover Email
-                  </label>
-                  <input
-                    id="settingNileshEmail"
-                    type="email"
-                    value="oakviewfreight@gmail.com"
-                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-slate"
-                  />
-                </div>
-              </div>
-
-              <div class="flex flex-wrap items-center gap-3 pt-2">
-                <button
-                  type="submit"
-                  class="px-5 py-2.5 rounded-xl bg-navy hover:bg-navy-dark text-white text-xs font-semibold transition shadow-sm"
-                >
-                  Save &amp; Connect
-                </button>
-                <button
-                  type="button"
-                  onclick="resetDemoData()"
-                  class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition"
-                >
-                  Reset Demo Data
-                </button>
-              </div>
-            </form>
+        <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-slate-200">
+            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Content &amp; TikTok Handoff Queue</h2>
           </div>
-
-          <!-- Website HTML Lead Capture Snippet -->
-          <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between space-y-4">
-            <div>
-              <div class="flex items-center justify-between">
-                <h2 class="text-lg font-bold text-navy">oakviewfreight.com Lead Capture Snippet</h2>
-                <button
-                  onclick="copySnippet('websiteFormSnippet')"
-                  class="px-3 py-1.5 rounded-xl bg-teal-slate hover:bg-teal-light text-white text-xs font-semibold transition"
-                >
-                  Copy Code
-                </button>
-              </div>
-              <p class="text-xs text-slate-500 mt-1">
-                Paste this JS handler into your <code class="bg-slate-100 px-1 py-0.5 rounded">oakviewfreight.com</code> enquiry form so website leads automatically appear in Tab 2 (using <code class="bg-slate-100 px-1 py-0.5 rounded">text/plain</code> to avoid CORS preflight blocks).
-              </p>
-
-              <pre id="websiteFormSnippet" class="mt-3 p-3.5 rounded-xl bg-slate-900 text-slate-100 text-xs overflow-x-auto leading-relaxed"><code>&lt;script&gt;
-async function submitOakviewLead(formData) {
-  const payload = {
-    token: "YOUR_SECRET_TOKEN",
-    action: "addLead",
-    source: new URLSearchParams(location.search).get("utm_source") || "Website",
-    company: formData.company,
-    contactName: formData.name,
-    email: formData.email,
-    phone: formData.whatsapp,
-    service: formData.service, // e.g. "UK Amazon FBA IOR/DDP"
-    notes: formData.message
-  };
-  await fetch("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL", {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload)
-  });
-}
-&lt;/script&gt;</code></pre>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-sky-50 border border-sky-200 text-xs text-slate-700">
-              <strong>UTM Tip for TikTok &amp; Social Bios:</strong> Share <code class="font-mono text-navy">https://oakviewfreight.com/?utm_source=TikTok</code> in Nilesh&rsquo;s UK TikTok bio and <code class="font-mono text-navy">?utm_source=LinkedIn</code> on LinkedIn so leads auto-tag by source.
-            </div>
-          </div>
+          <div id="contentQueueList" class="divide-y divide-slate-100"></div>
         </div>
-      </section>
-
-    </main>
-  </div>
-
-  <!-- ===================================================================== -->
-  <!-- MODAL: ADD NEW LEAD                                                   -->
-  <!-- ===================================================================== -->
-  <div id="leadModal" class="fixed inset-0 z-40 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 border border-slate-200">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 class="text-base font-bold text-navy">Log New Exporter Lead</h3>
-        <button onclick="closeLeadModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
       </div>
+    </section>
 
-      <form id="newLeadForm" class="mt-4 space-y-3.5">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <!-- TAB 5: AI OUTREACH & SCRIPT STUDIO (CONNECTS TO LOCAL OLLAMA OR TEMPLATES) -->
+    <section id="view-ai" class="hidden space-y-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Exporter / Company Name *</label>
-            <input id="leadCompany" type="text" required placeholder="e.g., Jaipur Home Crafts Pvt Ltd" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm" />
+            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">AI Outreach &amp; TikTok Script Generator</h2>
+            <p class="text-xs text-slate-500">Connects to your local Ollama endpoint (<code class="bg-slate-100 px-1 rounded">http://localhost:3001/v1</code>) when running on your PC, or uses built-in high-converting B2B templates anywhere.</p>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Decision Maker Name *</label>
-            <input id="leadName" type="text" required placeholder="e.g., Rohan Sharma" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm" />
-          </div>
+          <span id="aiModeBadge" class="px-2.5 py-1 rounded-full text-xs font-medium bg-sky-50 text-sky-700 border border-sky-200">Smart Template + Local Ollama Ready</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Acquisition Source *</label>
-            <select id="leadSource" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-              <option value="Website">Website (oakviewfreight.com)</option>
-              <option value="LinkedIn">LinkedIn</option>
-              <option value="Meta">Meta (Facebook / Instagram)</option>
-              <option value="TikTok">TikTok (UK Referral)</option>
+            <label class="block font-semibold text-slate-600 mb-1">Asset Type</label>
+            <select id="aiType" class="w-full border border-slate-300 rounded-lg px-3 py-2">
+              <option value="linkedin">LinkedIn Cold Outreach (Indian Exporter)</option>
+              <option value="email">Cold Email (Amazon FBA / TikTok Shop Seller)</option>
+              <option value="tiktok">45-Sec TikTok Script (For Nilesh UK)</option>
+              <option value="followup">Day-4 Polite Follow-Up Message</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Primary Service Required *</label>
-            <select id="leadService" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-              <option value="UK/EU Amazon FBA (DDP/IOR)">UK/EU Amazon FBA (DDP/IOR)</option>
-              <option value="UK TikTok Shop Entry (IOR)">UK TikTok Shop Entry (IOR)</option>
-              <option value="UK/EU Customs Clearance">UK/EU Customs Clearance</option>
-              <option value="UK Warehousing & Final-Mile">UK Warehousing &amp; Final-Mile</option>
-              <option value="Customs Consulting">Customs Consulting</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Email / WhatsApp</label>
-            <input id="leadContact" type="text" placeholder="+91 98... / export@company.in" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm" />
+            <label class="block font-semibold text-slate-600 mb-1">Target Product Niche</label>
+            <input id="aiNiche" type="text" value="Ayurvedic Wellness &amp; Home Textiles" class="w-full border border-slate-300 rounded-lg px-3 py-2" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Pipeline Stage</label>
-            <select id="leadStage" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-              <option value="New Enquiry">New Enquiry</option>
-              <option value="Qualifying (India)">Qualifying (India)</option>
-              <option value="Qualified - Ready for Nilesh">Qualified - Ready for Nilesh</option>
-              <option value="Handed Over to UK">Handed Over to UK</option>
+            <label class="block font-semibold text-slate-600 mb-1">Primary Pain Point</label>
+            <select id="aiPain" class="w-full border border-slate-300 rounded-lg px-3 py-2">
+              <option value="No UK entity / need Importer of Record (IOR)">No UK entity / need Importer of Record (IOR)</option>
+              <option value="HMRC customs delays &amp; DDP duty headaches">HMRC customs delays &amp; DDP duty headaches</option>
+              <option value="Slow final-mile delivery to Amazon UK FBA">Slow final-mile delivery to Amazon UK FBA</option>
             </select>
           </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Product Category &amp; Shipment Notes</label>
-          <textarea id="leadNotes" rows="2" placeholder="e.g., 500 units skincare launching on UK TikTok Shop next month; needs IOR + customs clearance." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm"></textarea>
+        <div class="mt-4 flex gap-3">
+          <button onclick="generateAiCopy()" class="px-4 py-2 bg-sky-700 hover:bg-sky-800 text-white text-xs font-semibold rounded-lg shadow transition">
+            Generate Copy
+          </button>
+          <button onclick="copyAiOutput()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition">
+            Copy to Clipboard
+          </button>
         </div>
 
-        <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeLeadModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-semibold">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded-xl bg-navy text-white text-xs font-semibold hover:bg-navy-dark">Save Lead</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ===================================================================== -->
-  <!-- MODAL: HANDOVER BRIEF TO NILESH (UK)                                  -->
-  <!-- ===================================================================== -->
-  <div id="handoverModal" class="fixed inset-0 z-40 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 border border-slate-200 space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 class="text-base font-bold text-navy">UK Commercial Handover Brief (For Nilesh Mistry)</h3>
-        <button onclick="closeHandoverModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+        <textarea id="aiOutputBox" rows="8" class="mt-4 w-full border border-slate-300 rounded-xl p-4 text-xs font-mono bg-slate-50"
+          placeholder="Generated outreach message or TikTok script will appear here..."></textarea>
       </div>
+    </section>
 
-      <p class="text-xs text-slate-500">
-        Copy this structured lead brief for WhatsApp or launch your email client to pass the qualified enquiry directly to Nilesh for UK pricing &amp; onboarding.
-      </p>
-
-      <textarea id="handoverText" rows="9" readonly class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-800 leading-relaxed"></textarea>
-
-      <div class="flex flex-wrap justify-end gap-2">
-        <button onclick="copyHandoverBrief()" class="px-4 py-2 rounded-xl bg-teal-slate hover:bg-teal-light text-white text-xs font-semibold">
-          Copy for WhatsApp
-        </button>
-        <a id="handoverMailtoBtn" href="#" class="px-4 py-2 rounded-xl bg-navy hover:bg-navy-dark text-white text-xs font-semibold">
-          Email to Nilesh
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================================================================== -->
-  <!-- MODAL: ADD TIKTOK / SOCIAL CONTENT ASSET                              -->
-  <!-- ===================================================================== -->
-  <div id="contentModal" class="fixed inset-0 z-40 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 border border-slate-200">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 class="text-base font-bold text-navy">Add Social / TikTok Content Asset</h3>
-        <button onclick="closeContentModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
-      </div>
-
-      <form id="newContentForm" class="mt-4 space-y-3.5">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <!-- TAB 6: SETUP & WEBHOOK CONFIGURATION -->
+    <section id="view-settings" class="hidden space-y-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm max-w-3xl space-y-4">
+        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Google Sheets &amp; Local LLM Configuration</h2>
+        <div class="text-xs space-y-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Platform *</label>
-            <select id="contentPlatform" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-              <option value="TikTok (UK Upload)">TikTok (UK Upload)</option>
-              <option value="LinkedIn">LinkedIn</option>
-              <option value="Instagram / Facebook">Instagram / Facebook</option>
-            </select>
+            <label class="block font-semibold text-slate-600 mb-1">Google Apps Script Web App URL</label>
+            <input id="settingsScriptUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full border border-slate-300 rounded-lg px-3 py-2" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Workflow Status</label>
-            <select id="contentStatus" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-              <option value="Draft (India)">Draft (India)</option>
-              <option value="Ready for Nilesh">Ready for Nilesh (UK)</option>
-              <option value="Published in UK">Published in UK</option>
-            </select>
+            <label class="block font-semibold text-slate-600 mb-1">Local Ollama / FreeLLMAPI Endpoint (Optional)</label>
+            <input id="settingsOllamaUrl" type="url" value="http://localhost:3001/v1/chat/completions" class="w-full border border-slate-300 rounded-lg px-3 py-2" />
           </div>
+          <button onclick="saveSettings()" class="px-4 py-2 bg-sky-700 hover:bg-sky-800 text-white font-semibold rounded-lg shadow">
+            Save Configuration
+          </button>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Post / Video Topic *</label>
-          <input id="contentTitle" type="text" required placeholder="e.g., How Indian Brands Sell on UK TikTok Shop Without a UK Entity" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm" />
+        <div class="pt-4 border-t border-slate-200 text-xs text-slate-600 space-y-2">
+          <div class="font-bold text-slate-800">Website Contact Form Webhook Snippet (For oakviewfreight.com):</div>
+          <pre class="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto text-[11px]">fetch("YOUR_APPS_SCRIPT_WEB_APP_URL", {
+  method: "POST",
+  body: JSON.stringify({
+    type: "add_lead",
+    source: "Website_Public_Form",
+    company: document.getElementById("company").value,
+    contact: document.getElementById("name").value,
+    emailPhone: document.getElementById("email").value,
+    service: document.getElementById("service").value,
+    notes: document.getElementById("message").value
+  })
+});</pre>
         </div>
+      </div>
+    </section>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Caption &amp; Hashtags *</label>
-          <textarea id="contentCaption" rows="3" required placeholder="Selling from India to UK Amazon FBA or TikTok Shop? Oakview Freight acts as your UK Importer of Record... #IndianExporters #AmazonFBAUK #TikTokShopUK" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm"></textarea>
-        </div>
+  </main>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Google Drive / Asset Link</label>
-          <input id="contentAssetUrl" type="url" placeholder="https://drive.google.com/..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm" />
-        </div>
-
-        <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeContentModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-semibold">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded-xl bg-teal-slate text-white text-xs font-semibold hover:bg-teal-light">Add to Queue</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ===================================================================== -->
-  <!-- JAVASCRIPT APPLICATION LOGIC                                          -->
-  <!-- ===================================================================== -->
   <script>
-    // -----------------------------------------------------------------------
-    // 1. DEFAULT SEED DATA (Pre-loaded from Oakview 90-Day Working Plan)
-    // -----------------------------------------------------------------------
+    // =========================================================================
+    // STATE & DEFAULT SEED DATA (FALLBACK IF OFFLINE)
+    // =========================================================================
+    let SCRIPT_URL = localStorage.getItem("oakview_script_url") || "";
+    let SESSION_TOKEN = sessionStorage.getItem("oakview_session_token") || "";
+    let USER_NAME = sessionStorage.getItem("oakview_user_name") || "Jalal B";
+    let OFFLINE_MODE = false;
+
     const DEFAULT_CHECKLIST = [
-      { id: 'D01', day: 'Day 01', month: 'Month 1', task: 'Conduct video alignment call; review logo, prototype website & social pages; confirm payment method', platform: 'Website / Social', owner: 'Joint', status: 'Completed' },
-      { id: 'D02', day: 'Day 02', month: 'Month 1', task: 'Purchase custom domain (oakviewfreight.com) & hosting; register Business Email & Business WhatsApp', platform: 'Website / WhatsApp', owner: 'Nilesh Mistry', status: 'In Progress' },
-      { id: 'D03', day: 'Day 03', month: 'Month 1', task: 'Confirm UK/EU service coverage, pricing enquiry workflow, contact details & brand colour preferences', platform: 'Operations', owner: 'Nilesh Mistry', status: 'Pending' },
-      { id: 'D04', day: 'Day 04', month: 'Month 1', task: 'Connect custom domain to website; update copy with IOR, DDP, customs clearance & final-mile details', platform: 'Website', owner: 'Jalal B', status: 'Pending' },
-      { id: 'D05', day: 'Day 05', month: 'Month 1', task: 'Transfer admin ownership of LinkedIn, Meta Business Suite, Facebook & Instagram; enable delegated access', platform: 'LinkedIn / Meta', owner: 'Joint', status: 'Pending' },
-      { id: 'D06', day: 'Day 06', month: 'Month 1', task: 'Set up UK TikTok Business account from UK side & test India-to-UK video handoff workflow', platform: 'TikTok', owner: 'Joint', status: 'Pending' },
-      { id: 'D10', day: 'Day 10', month: 'Month 1', task: 'Research & log first 30 Indian Amazon Global Selling / FBA exporters targeting UK market', platform: 'LinkedIn / Research', owner: 'Jalal B', status: 'Pending' },
-      { id: 'D11', day: 'Day 11', month: 'Month 1', task: 'Research & log 30 Indian D2C brands suited for UK TikTok Shop entry needing IOR/DDP support', platform: 'Meta / Research', owner: 'Jalal B', status: 'Pending' },
-      { id: 'D15', day: 'Day 15', month: 'Month 1', task: 'Publish introductory brand posts on LinkedIn, FB & IG; send first TikTok video to Nilesh for UK upload', platform: 'All Social', owner: 'Joint', status: 'Pending' },
-      { id: 'D16', day: 'Day 16', month: 'Month 1', task: 'Launch Outreach Wave 1: message first 15 qualified Indian Amazon FBA exporters', platform: 'LinkedIn / Email', owner: 'Jalal B', status: 'Pending' },
-      { id: 'D30', day: 'Day 30', month: 'Month 1', task: 'Deliver Month 1 Activity & Performance Review; align on Month 2 segment priorities', platform: 'Reporting', owner: 'Joint', status: 'Pending' },
-      { id: 'D35', day: 'Day 35', month: 'Month 2', task: 'Expand database with 20 Indian Apparel & Lifestyle brands eyeing UK TikTok Shop; run outreach wave', platform: 'LinkedIn / Meta', owner: 'Jalal B', status: 'Pending' },
-      { id: 'D42', day: 'Day 42', month: 'Month 2', task: 'Conduct discovery qualification with interested respondents & route warm enquiries to Nilesh', platform: 'WhatsApp / Email', owner: 'Joint', status: 'Pending' },
-      { id: 'D60', day: 'Day 60', month: 'Month 2', task: 'Present Month 2 Performance Review; identify winning exporter verticals for Month 3 focus', platform: 'Reporting', owner: 'Joint', status: 'Pending' },
-      { id: 'D62', day: 'Day 62', month: 'Month 3', task: 'Launch refined high-converting outreach scripts targeting top-performing Indian exporter segments', platform: 'LinkedIn / Email', owner: 'Jalal B', status: 'Pending' },
-      { id: 'D76', day: 'Day 76', month: 'Month 3', task: 'Publish strong CTA campaign across LinkedIn, Meta & TikTok inviting UK market-entry consultations', platform: 'All Social', owner: 'Joint', status: 'Pending' },
-      { id: 'D90', day: 'Day 90', month: 'Month 3', task: 'Deliver 90-Day Summary Report, Master Prospect Database & Phase 2 growth recommendations', platform: 'Reporting', owner: 'Joint', status: 'Pending' }
+      { Day: 1, Month: "Month 1", Week: "Week 1", Workstream: "Kickoff & Alignment", Task: "Hold kickoff video call; confirm scope, UK/EU service coverage, and quote handling protocol", Owner: "Joint", Channel: "Video Call / Email", Status: "Pending", Notes: "" },
+      { Day: 2, Month: "Month 1", Week: "Week 1", Workstream: "Infrastructure & Domain", Task: "Register custom domain (oakviewfreight.com) and configure DNS CNAME/MX records to website", Owner: "Nilesh Mistry", Channel: "Domain Registrar / GitHub", Status: "Pending", Notes: "" },
+      { Day: 3, Month: "Month 1", Week: "Week 1", Workstream: "Communication Setup", Task: "Set up UK Business WhatsApp number and professional domain email (info@oakviewfreight.com)", Owner: "Nilesh Mistry", Channel: "WhatsApp Business / Email", Status: "Pending", Notes: "" },
+      { Day: 4, Month: "Month 1", Week: "Week 1", Workstream: "Account Handover", Task: "Share admin email; transfer ownership of LinkedIn, Facebook, Instagram & Meta Business Suite via delegated access", Owner: "Joint", Channel: "Meta Suite / LinkedIn", Status: "Pending", Notes: "" },
+      { Day: 5, Month: "Month 1", Week: "Week 1", Workstream: "Brand & Website", Task: "Review temporary logo, color palette, and website copy; finalize service descriptions (IOR/DDP, Customs, Final-Mile)", Owner: "Joint", Channel: "Website / Brand Kit", Status: "Pending", Notes: "" }
     ];
 
-    const DEFAULT_LEADS = [
-      {
-        id: 'L-101',
-        company: 'Jaipur Botanicals Pvt Ltd',
-        name: 'Ananya Verma',
-        source: 'LinkedIn',
-        service: 'UK/EU Amazon FBA (DDP/IOR)',
-        contact: '+91 98290 44120 | export@jaipurbotanicals.in',
-        stage: 'Qualified - Ready for Nilesh',
-        notes: 'Skincare exporter shipping 400kg monthly to Amazon UK FBA; needs UK Importer of Record & customs clearance.',
-        createdAt: '2026-11-12'
-      },
-      {
-        id: 'L-102',
-        company: 'Surat Athleisure Co.',
-        name: 'Vikram Patel',
-        source: 'TikTok',
-        service: 'UK TikTok Shop Entry (IOR)',
-        contact: '+91 98251 77890 | vikram@suratathleisure.com',
-        stage: 'Qualified - Ready for Nilesh',
-        notes: 'Found Oakview via UK TikTok post. Launching activewear on TikTok Shop UK; needs DDP + UK warehousing.',
-        createdAt: '2026-11-13'
-      },
-      {
-        id: 'L-103',
-        company: 'Moradabad Brass & Home',
-        name: 'Faisal Khan',
-        source: 'Website',
-        service: 'UK/EU Customs Clearance',
-        contact: 'sales@moradabadhome.co.in',
-        stage: 'Qualifying (India)',
-        notes: 'Submitted form on oakviewfreight.com asking about UK/EU customs clearance rates for home decor.',
-        createdAt: '2026-11-14'
-      },
-      {
-        id: 'L-104',
-        company: 'Bengaluru Roasters Direct',
-        name: 'Meera Nair',
-        source: 'Meta',
-        service: 'UK Warehousing & Final-Mile',
-        contact: '+91 99001 33412',
-        stage: 'New Enquiry',
-        notes: 'Replied to Instagram carousel about UK final-mile fulfilment for specialty coffee pouches.',
-        createdAt: '2026-11-14'
+    let checklistData = JSON.parse(localStorage.getItem("oakview_chk_cache") || "null") || DEFAULT_CHECKLIST;
+    let leadsData = JSON.parse(localStorage.getItem("oakview_leads_cache") || "[]");
+    let contentData = JSON.parse(localStorage.getItem("oakview_cnt_cache") || "[]");
+
+    // Initialize Login Field if URL already saved
+    window.addEventListener("DOMContentLoaded", () => {
+      if (SCRIPT_URL) {
+        document.getElementById("loginScriptUrl").value = SCRIPT_URL;
+        document.getElementById("settingsScriptUrl").value = SCRIPT_URL;
       }
-    ];
-
-    const DEFAULT_CONTENT = [
-      {
-        id: 'C-01',
-        platform: 'TikTok (UK Upload)',
-        title: 'How Indian Brands Sell on UK TikTok Shop Without a UK Company',
-        caption: 'Exporting from India to UK TikTok Shop? You do not need to get stuck at UK customs. Oakview Freight acts as your Importer of Record (IOR), handles customs clearance, and delivers final-mile across the UK. #IndianExporters #TikTokShopUK #UKLogistics #DDPShipping',
-        assetUrl: 'https://drive.google.com/',
-        status: 'Ready for Nilesh'
-      },
-      {
-        id: 'C-02',
-        platform: 'LinkedIn',
-        title: 'DDP vs DAP: Avoiding Amazon UK FBA Border Delays for Indian Exporters',
-        caption: 'Many Indian Amazon FBA shipments face costly storage holds at UK ports due to missing Importer of Record documentation. Here is how Oakview Freight Services Ltd. streamlines UK & EU customs clearance end-to-end. #AmazonFBAUK #IndiaExports #CustomsClearance',
-        assetUrl: 'https://www.linkedin.com/company/oakview-freight',
-        status: 'Published in UK'
-      },
-      {
-        id: 'C-03',
-        platform: 'TikTok (UK Upload)',
-        title: '3 Customs Mistakes Indian Sellers Make Shipping to UK Warehouses',
-        caption: 'Before sending your next pallet to the UK, check these 3 HMRC customs rules! DM us "UK" for a tailored DDP & warehousing quote. #IndiaToUK #EcommerceLogistics #AmazonFBA',
-        assetUrl: 'https://drive.google.com/',
-        status: 'Draft (India)'
-      }
-    ];
-
-    // -----------------------------------------------------------------------
-    // 2. STATE MANAGEMENT (LocalStorage + Optional Google Apps Script Sync)
-    // -----------------------------------------------------------------------
-    let appState = {
-      checklist: JSON.parse(localStorage.getItem('ov_checklist')) || DEFAULT_CHECKLIST,
-      leads: JSON.parse(localStorage.getItem('ov_leads')) || DEFAULT_LEADS,
-      content: JSON.parse(localStorage.getItem('ov_content')) || DEFAULT_CONTENT,
-      settings: JSON.parse(localStorage.getItem('ov_settings')) || {
-        apiUrl: '',
-        apiToken: '',
-        pin: '2026',
-        nileshEmail: 'oakviewfreight@gmail.com'
-      },
-      leadSourceFilter: 'ALL'
-    };
-
-    let leadChartInstance = null;
-
-    function saveState() {
-      localStorage.setItem('ov_checklist', JSON.stringify(appState.checklist));
-      localStorage.setItem('ov_leads', JSON.stringify(appState.leads));
-      localStorage.setItem('ov_content', JSON.stringify(appState.content));
-      localStorage.setItem('ov_settings', JSON.stringify(appState.settings));
-      updateKPIs();
-      renderLeadChart();
-    }
-
-    // -----------------------------------------------------------------------
-    // 3. PIN LOCK SCREEN LOGIC
-    // -----------------------------------------------------------------------
-    document.getElementById('pinForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const entered = document.getElementById('pinInput').value.trim();
-      const expected = appState.settings.pin || '2026';
-      if (entered === expected) {
-        document.getElementById('lockScreen').classList.add('hidden');
-        document.getElementById('appShell').classList.remove('hidden');
-        document.getElementById('pinError').classList.add('hidden');
-        initDashboard();
-      } else {
-        document.getElementById('pinError').classList.remove('hidden');
+      if (SESSION_TOKEN && SCRIPT_URL) {
+        unlockUI(USER_NAME);
+        syncAllFromSheet();
       }
     });
 
-    function lockApp() {
-      document.getElementById('pinInput').value = '';
-      document.getElementById('appShell').classList.add('hidden');
-      document.getElementById('lockScreen').classList.remove('hidden');
+    // =========================================================================
+    // SERVER-SIDE PASSWORD AUTHENTICATION AGAINST GOOGLE SHEETS 'Password' TAB
+    // =========================================================================
+    async function handleServerLogin() {
+      const urlInput = document.getElementById("loginScriptUrl").value.trim();
+      const pwdInput = document.getElementById("loginPassword").value.trim();
+      const errBox = document.getElementById("loginError");
+      const btn = document.getElementById("loginBtn");
+
+      errBox.classList.add("hidden");
+      if (!urlInput) {
+        errBox.textContent = "Please paste your deployed Google Apps Script Web App URL.";
+        errBox.classList.remove("hidden");
+        return;
+      }
+      if (!pwdInput) {
+        errBox.textContent = "Please enter your password.";
+        errBox.classList.remove("hidden");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Verifying with Google Sheet...";
+
+      try {
+        const response = await fetch(urlInput, {
+          method: "POST",
+          body: JSON.stringify({ type: "login", password: pwdInput })
+        });
+        const result = await response.json();
+
+        if (result.status === "ok" && result.token) {
+          SCRIPT_URL = urlInput;
+          SESSION_TOKEN = result.token;
+          USER_NAME = (result.user && result.user.name) ? result.user.name : "Admin";
+          OFFLINE_MODE = false;
+
+          localStorage.setItem("oakview_script_url", SCRIPT_URL);
+          sessionStorage.setItem("oakview_session_token", SESSION_TOKEN);
+          sessionStorage.setItem("oakview_user_name", USER_NAME);
+          document.getElementById("settingsScriptUrl").value = SCRIPT_URL;
+
+          unlockUI(USER_NAME);
+          await syncAllFromSheet();
+        } else {
+          errBox.textContent = result.message || "Incorrect or inactive password.";
+          errBox.classList.remove("hidden");
+        }
+      } catch (err) {
+        errBox.textContent = "Could not reach Apps Script. Verify the Web App URL is deployed with 'Anyone' access.";
+        errBox.classList.remove("hidden");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Unlock Command Center";
+      }
     }
 
-    // -----------------------------------------------------------------------
-    // 4. INITIALIZATION & NAVIGATION
-    // -----------------------------------------------------------------------
-    function initDashboard() {
-      loadSettingsForm();
-      updateConnectionBadge();
-      updateKPIs();
+    function enterOfflineDemoMode() {
+      OFFLINE_MODE = true;
+      unlockUI("Offline Local Mode");
+      renderAll();
+    }
+
+    function unlockUI(displayName) {
+      document.getElementById("loginOverlay").classList.add("hidden");
+      document.getElementById("userDisplay").textContent = displayName;
+    }
+
+    function logoutSession() {
+      sessionStorage.removeItem("oakview_session_token");
+      sessionStorage.removeItem("oakview_user_name");
+      SESSION_TOKEN = "";
+      document.getElementById("loginPassword").value = "";
+      document.getElementById("loginOverlay").classList.remove("hidden");
+    }
+
+    // =========================================================================
+    // LIVE GOOGLE SHEETS SYNC (READ & WRITE WITH TOKEN)
+    // =========================================================================
+    async function syncAllFromSheet() {
+      if (OFFLINE_MODE || !SCRIPT_URL || !SESSION_TOKEN) {
+        renderAll();
+        return;
+      }
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=all&token=${encodeURIComponent(SESSION_TOKEN)}`);
+        const json = await res.json();
+        if (json.status === "unauthorized") {
+          logoutSession();
+          alert("Session expired. Please log in again.");
+          return;
+        }
+        if (json.status === "ok" && json.data) {
+          if (json.data.checklist && json.data.checklist.length) {
+            checklistData = json.data.checklist;
+            localStorage.setItem("oakview_chk_cache", JSON.stringify(checklistData));
+          }
+          if (json.data.leads) {
+            leadsData = json.data.leads;
+            localStorage.setItem("oakview_leads_cache", JSON.stringify(leadsData));
+          }
+          if (json.data.content) {
+            contentData = json.data.content;
+            localStorage.setItem("oakview_cnt_cache", JSON.stringify(contentData));
+          }
+          renderAll();
+        }
+      } catch (e) {
+        console.error("Sync failed:", e);
+        renderAll();
+      }
+    }
+
+    async function updateTaskStatus(dayNum, newStatus) {
+      const item = checklistData.find(t => String(t.Day) === String(dayNum));
+      if (item) item.Status = newStatus;
+      localStorage.setItem("oakview_chk_cache", JSON.stringify(checklistData));
+      renderAll();
+
+      if (!OFFLINE_MODE && SCRIPT_URL && SESSION_TOKEN) {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ type: "update_task", token: SESSION_TOKEN, day: dayNum, status: newStatus })
+        });
+      }
+    }
+
+    async function submitNewLead(e) {
+      e.preventDefault();
+      const payload = {
+        type: "add_lead",
+        token: SESSION_TOKEN,
+        source: document.getElementById("leadSource").value,
+        company: document.getElementById("leadCompany").value.trim(),
+        contact: document.getElementById("leadContact").value.trim(),
+        intent: document.getElementById("leadIntent").value,
+        emailPhone: document.getElementById("leadEmailPhone").value.trim(),
+        product: document.getElementById("leadProduct").value.trim(),
+        service: document.getElementById("leadService").value,
+        notes: document.getElementById("leadNotes").value.trim(),
+        handedOver: "No",
+        leadStatus: "New"
+      };
+
+      leadsData.unshift({
+        "Lead ID": "LD-" + String(leadsData.length + 1).padStart(3, "0"),
+        "Date Received": new Date().toISOString().slice(0, 10),
+        "Source Channel": payload.source,
+        "Company Name": payload.company,
+        "Contact Person": payload.contact,
+        "Email / WhatsApp": payload.emailPhone,
+        "Product Category": payload.product,
+        "Required Service": payload.service,
+        "Intent Score": payload.intent,
+        "Handed Over to Nilesh?": "No",
+        "Qualification Notes": payload.notes
+      });
+      localStorage.setItem("oakview_leads_cache", JSON.stringify(leadsData));
+      e.target.reset();
+      renderAll();
+
+      if (!OFFLINE_MODE && SCRIPT_URL && SESSION_TOKEN) {
+        await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
+        await syncAllFromSheet();
+      }
+    }
+
+    async function submitNewContent(e) {
+      e.preventDefault();
+      const payload = {
+        type: "add_content",
+        token: SESSION_TOKEN,
+        targetDate: document.getElementById("cntDate").value.trim(),
+        platform: document.getElementById("cntPlatform").value,
+        topic: document.getElementById("cntTopic").value.trim(),
+        caption: document.getElementById("cntCaption").value.trim(),
+        driveLink: document.getElementById("cntDrive").value.trim(),
+        status: document.getElementById("cntStatus").value,
+        publisher: document.getElementById("cntPlatform").value.includes("TikTok") ? "Nilesh Mistry" : "Jalal B"
+      };
+
+      contentData.unshift({
+        "Post ID": "CNT-" + String(contentData.length + 1).padStart(2, "0"),
+        "Target Date": payload.targetDate,
+        "Platform": payload.platform,
+        "Topic / Hook": payload.topic,
+        "Caption & Hashtags": payload.caption,
+        "Status": payload.status,
+        "Drive Asset Link": payload.driveLink,
+        "Publisher": payload.publisher
+      });
+      localStorage.setItem("oakview_cnt_cache", JSON.stringify(contentData));
+      e.target.reset();
+      renderAll();
+
+      if (!OFFLINE_MODE && SCRIPT_URL && SESSION_TOKEN) {
+        await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
+        await syncAllFromSheet();
+      }
+    }
+
+    // =========================================================================
+    // UI RENDERING FUNCTIONS
+    // =========================================================================
+    function renderAll() {
+      renderOverview();
       renderChecklist();
       renderLeads();
       renderContentQueue();
-      renderLeadChart();
     }
 
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
-      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+    function renderOverview() {
+      const total = checklistData.length || 90;
+      const completed = checklistData.filter(t => t.Status === "Completed").length;
+      const pct = total ? ((completed / total) * 100).toFixed(1) : "0.0";
 
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-navy', 'text-white', 'shadow-sm');
-        btn.classList.add('text-slate-600', 'hover:bg-slate-100');
-      });
-      const activeBtn = document.getElementById(`tabBtn-${tabId}`);
-      activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100');
-      activeBtn.classList.add('bg-navy', 'text-white', 'shadow-sm');
+      document.getElementById("kpiCompletionPct").textContent = pct + "%";
+      document.getElementById("kpiCompletionCount").textContent = `${completed} / ${total} Days`;
+      document.getElementById("kpiProgressBar").style.width = pct + "%";
 
-      if (tabId === 'leads') renderLeadChart();
+      document.getElementById("kpiTotalLeads").textContent = leadsData.length;
+      const hotCount = leadsData.filter(l => l["Intent Score"] === "Hot").length;
+      document.getElementById("kpiHotLeads").textContent = `${hotCount} Hot Leads`;
+
+      const handed = leadsData.filter(l => l["Handed Over to Nilesh?"] === "Yes").length;
+      document.getElementById("kpiHandedOver").textContent = handed;
+
+      const tkReady = contentData.filter(c => c.Status === "Ready for UK").length;
+      const tkPub = contentData.filter(c => c.Status === "Published").length;
+      document.getElementById("kpiTiktokReady").textContent = tkReady;
+      document.getElementById("kpiTiktokPublished").textContent = `${tkPub} Published`;
+
+      // Phase bars
+      const phases = ["Month 1", "Month 2", "Month 3"];
+      document.getElementById("phaseProgressContainer").innerHTML = phases.map(m => {
+        const sub = checklistData.filter(t => t.Month === m);
+        const done = sub.filter(t => t.Status === "Completed").length;
+        const p = sub.length ? Math.round((done / sub.length) * 100) : 0;
+        return `
+          <div>
+            <div class="flex justify-between text-xs font-medium mb-1">
+              <span>${m}</span>
+              <span class="text-slate-500">${done}/${sub.length} (${p}%)</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div class="bg-sky-600 h-2 rounded-full" style="width:${p}%"></div>
+            </div>
+          </div>`;
+      }).join("");
+
+      // Next 5 pending tasks
+      const nextTasks = checklistData.filter(t => t.Status !== "Completed").slice(0, 5);
+      document.getElementById("upcomingTasksList").innerHTML = nextTasks.map(t => `
+        <div class="py-3 flex items-center justify-between gap-4 text-xs">
+          <div>
+            <span class="font-bold text-sky-700 mr-2">Day ${t.Day}</span>
+            <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-medium mr-2">${t.Owner}</span>
+            <span class="text-slate-800">${t.Task}</span>
+          </div>
+          <button onclick="updateTaskStatus(${t.Day}, 'Completed')"
+            class="shrink-0 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold border border-emerald-200">
+            &#10003; Done
+          </button>
+        </div>
+      `).join("") || `<div class="py-4 text-xs text-slate-500">All tasks completed!</div>`;
     }
 
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMsg').textContent = msg;
-      toast.classList.remove('hidden');
-      clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => toast.classList.add('hidden'), 3200);
-    }
-
-    // -----------------------------------------------------------------------
-    // 5. KPI CALCULATIONS & CHART.JS
-    // -----------------------------------------------------------------------
-    function updateKPIs() {
-      // Checklist KPI
-      const totalTasks = appState.checklist.length;
-      const doneTasks = appState.checklist.filter(t => t.status === 'Completed').length;
-      const pct = totalTasks ? Math.round((doneTasks / totalTasks) * 100) : 0;
-      document.getElementById('kpiChecklistCount').textContent = `${doneTasks} / ${totalTasks}`;
-      document.getElementById('kpiChecklistPct').textContent = `${pct}%`;
-      document.getElementById('kpiChecklistBar').style.width = `${pct}%`;
-
-      // Leads KPI
-      const totalLeads = appState.leads.length;
-      document.getElementById('kpiTotalLeads').textContent = totalLeads;
-
-      const counts = { Website: 0, LinkedIn: 0, Meta: 0, TikTok: 0 };
-      appState.leads.forEach(l => {
-        if (counts[l.source] !== undefined) counts[l.source]++;
-      });
-      document.getElementById('kpiLeadChannelMini').innerHTML = Object.entries(counts)
-        .map(([k, v]) => `<span class="px-2 py-0.5 rounded-md bg-slate-100">${k}: <strong>${v}</strong></span>`)
-        .join('');
-
-      // Qualified Ready for Nilesh
-      const readyCount = appState.leads.filter(
-        l => l.stage === 'Qualified - Ready for Nilesh' || l.stage === 'Handed Over to UK'
-      ).length;
-      document.getElementById('kpiQualifiedLeads').textContent = readyCount;
-
-      // TikTok Bridge KPI
-      const tikTokItems = appState.content.filter(c => c.platform.includes('TikTok'));
-      const readyUK = tikTokItems.filter(c => c.status === 'Ready for Nilesh').length;
-      const pubUK = tikTokItems.filter(c => c.status === 'Published in UK').length;
-      const draftIN = tikTokItems.filter(c => c.status === 'Draft (India)').length;
-      document.getElementById('kpiTikTokReady').textContent = readyUK;
-      document.getElementById('kpiTikTokSub').textContent = `${pubUK} published in UK • ${draftIN} in India draft`;
-    }
-
-    function renderLeadChart() {
-      const ctx = document.getElementById('leadSourceChart');
-      if (!ctx) return;
-
-      const counts = { Website: 0, LinkedIn: 0, Meta: 0, TikTok: 0 };
-      appState.leads.forEach(l => {
-        if (counts[l.source] !== undefined) counts[l.source]++;
-      });
-
-      if (leadChartInstance) leadChartInstance.destroy();
-
-      leadChartInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Website', 'LinkedIn', 'Meta (FB/IG)', 'TikTok'],
-          datasets: [{
-            data: [counts.Website, counts.LinkedIn, counts.Meta, counts.TikTok],
-            backgroundColor: ['#1B365D', '#0A66C2', '#2C5E7A', '#0F172A'],
-            borderWidth: 2,
-            borderColor: '#ffffff'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '64%',
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { boxWidth: 12, font: { family: 'Inter', size: 11 } }
-            }
-          }
-        }
-      });
-    }
-
-    // -----------------------------------------------------------------------
-    // 6. TAB 1: 90-DAY DAILY CHECKLIST
-    // -----------------------------------------------------------------------
     function renderChecklist() {
-      const monthFilter = document.getElementById('filterMonth').value;
-      const ownerFilter = document.getElementById('filterOwner').value;
-      const statusFilter = document.getElementById('filterStatus').value;
-      const query = document.getElementById('searchChecklist').value.toLowerCase().trim();
+      const mFilter = document.getElementById("filterMonth").value;
+      const oFilter = document.getElementById("filterOwner").value;
+      const sFilter = document.getElementById("filterStatus").value;
+      const q = document.getElementById("searchTask").value.toLowerCase();
 
-      const filtered = appState.checklist.filter(item => {
-        if (monthFilter !== 'ALL' && item.month !== monthFilter) return false;
-        if (ownerFilter !== 'ALL' && item.owner !== ownerFilter) return false;
-        if (statusFilter !== 'ALL' && item.status !== statusFilter) return false;
-        if (query && !(
-          item.task.toLowerCase().includes(query) ||
-          item.day.toLowerCase().includes(query) ||
-          item.platform.toLowerCase().includes(query)
-        )) return false;
+      const filtered = checklistData.filter(t => {
+        if (mFilter !== "ALL" && t.Month !== mFilter) return false;
+        if (oFilter !== "ALL" && t.Owner !== oFilter) return false;
+        if (sFilter !== "ALL" && t.Status !== sFilter) return false;
+        if (q && !`${t.Day} ${t.Workstream} ${t.Task} ${t.Channel}`.toLowerCase().includes(q)) return false;
         return true;
       });
 
-      const tbody = document.getElementById('checklistTableBody');
-      if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400 text-sm">No tasks match the selected filters.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(item => {
-        const badgeStyle = {
-          'Completed': 'bg-emerald-50 text-emerald-700 border-emerald-200',
-          'In Progress': 'bg-amber-50 text-amber-700 border-amber-200',
-          'Blocked': 'bg-rose-50 text-rose-700 border-rose-200',
-          'Pending': 'bg-slate-100 text-slate-700 border-slate-200'
-        }[item.status] || 'bg-slate-100 text-slate-700';
-
+      document.getElementById("checklistTableBody").innerHTML = filtered.map(t => {
+        const cls = t.Status === "Completed" ? "status-completed" :
+                    t.Status === "In Progress" ? "status-inprogress" :
+                    t.Status === "Blocked" ? "status-blocked" : "status-pending";
         return `
-          <tr class="hover:bg-slate-50/80 transition">
-            <td class="py-3 px-3 font-bold text-navy whitespace-nowrap">${item.day}</td>
-            <td class="py-3 px-3 text-xs font-medium text-slate-500 whitespace-nowrap">${item.month}</td>
-            <td class="py-3 px-3 text-slate-800">${item.task}</td>
-            <td class="py-3 px-3 text-xs text-slate-600 whitespace-nowrap">${item.platform}</td>
-            <td class="py-3 px-3 text-xs font-semibold text-teal-slate whitespace-nowrap">${item.owner}</td>
-            <td class="py-3 px-3 whitespace-nowrap">
-              <select
-                onchange="updateTaskStatus('${item.id}', this.value)"
-                class="px-2.5 py-1.5 rounded-xl border text-xs font-semibold cursor-pointer focus:outline-none ${badgeStyle}"
-              >
-                <option value="Pending" ${item.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                <option value="In Progress" ${item.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
-                <option value="Completed" ${item.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                <option value="Blocked" ${item.status === 'Blocked' ? 'selected' : ''}>Blocked</option>
+          <tr class="hover:bg-slate-50">
+            <td class="px-4 py-3 text-center font-bold text-slate-700">${t.Day}</td>
+            <td class="px-4 py-3 text-slate-500">${t.Month}<br><span class="text-[11px]">${t.Week}</span></td>
+            <td class="px-4 py-3 font-medium text-slate-700">${t.Workstream}</td>
+            <td class="px-4 py-3 text-slate-800">${t.Task}</td>
+            <td class="px-4 py-3 text-center"><span class="px-2 py-1 rounded bg-slate-100 text-slate-700 font-medium">${t.Owner}</span></td>
+            <td class="px-4 py-3 text-center">
+              <select onchange="updateTaskStatus(${t.Day}, this.value)" class="px-2.5 py-1 rounded-lg font-semibold border border-slate-200 ${cls}">
+                <option value="Pending" ${t.Status==="Pending"?"selected":""}>Pending</option>
+                <option value="In Progress" ${t.Status==="In Progress"?"selected":""}>In Progress</option>
+                <option value="Completed" ${t.Status==="Completed"?"selected":""}>Completed</option>
+                <option value="Blocked" ${t.Status==="Blocked"?"selected":""}>Blocked</option>
               </select>
             </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function updateTaskStatus(taskId, newStatus) {
-      const task = appState.checklist.find(t => t.id === taskId);
-      if (!task) return;
-      task.status = newStatus;
-      saveState();
-      renderChecklist();
-      showToast(`${task.day} marked as ${newStatus}`);
-      pushToGoogleAppsScript({ action: 'updateChecklist', id: taskId, status: newStatus });
-    }
-
-    // -----------------------------------------------------------------------
-    // 7. TAB 2: MULTI-CHANNEL LEAD TRACKER & NILESH HANDOVER
-    // -----------------------------------------------------------------------
-    function setLeadSourceFilter(src) {
-      appState.leadSourceFilter = src;
-      document.querySelectorAll('.lead-src-pill').forEach(btn => {
-        if (btn.dataset.source === src) {
-          btn.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
-          btn.classList.add('bg-navy', 'text-white');
-        } else {
-          btn.classList.remove('bg-navy', 'text-white');
-          btn.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
-        }
-      });
-      renderLeads();
+          </tr>`;
+      }).join("");
     }
 
     function renderLeads() {
-      const filtered = appState.leads.filter(l =>
-        appState.leadSourceFilter === 'ALL' ? true : l.source === appState.leadSourceFilter
-      );
-
-      const tbody = document.getElementById('leadsTableBody');
-      if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 text-sm">No leads recorded under this channel yet.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(lead => {
-        const srcBadge = {
-          'Website': 'bg-navy/10 text-navy',
-          'LinkedIn': 'bg-sky-50 text-sky-800',
-          'Meta': 'bg-indigo-50 text-indigo-700',
-          'TikTok': 'bg-slate-900 text-white'
-        }[lead.source] || 'bg-slate-100 text-slate-700';
-
+      document.getElementById("leadsTableBody").innerHTML = leadsData.map((l, idx) => {
+        const intentCls = l["Intent Score"] === "Hot" ? "badge-hot" : l["Intent Score"] === "Warm" ? "badge-warm" : "badge-cold";
         return `
-          <tr class="hover:bg-slate-50/80 transition">
-            <td class="py-3 px-3">
-              <div class="font-bold text-navy">${lead.company}</div>
-              <div class="text-xs text-slate-500">${lead.name} &bull; ${lead.contact}</div>
-              <div class="text-xs text-slate-600 mt-1">${lead.notes}</div>
+          <tr class="hover:bg-slate-50">
+            <td class="px-4 py-3">
+              <div class="font-bold text-slate-900">${l["Company Name"] || ""}</div>
+              <div class="text-slate-500">${l["Contact Person"] || ""} &bull; ${l["Email / WhatsApp"] || ""}</div>
             </td>
-            <td class="py-3 px-3 whitespace-nowrap">
-              <span class="px-2.5 py-1 rounded-lg text-xs font-semibold ${srcBadge}">${lead.source}</span>
+            <td class="px-4 py-3 text-center font-medium">${l["Source Channel"] || ""}</td>
+            <td class="px-4 py-3">
+              <div class="font-medium text-slate-800">${l["Required Service"] || ""}</div>
+              <div class="text-slate-500">${l["Product Category"] || ""}</div>
             </td>
-            <td class="py-3 px-3 text-xs font-medium text-slate-700">${lead.service}</td>
-            <td class="py-3 px-3 whitespace-nowrap">
-              <select
-                onchange="updateLeadStage('${lead.id}', this.value)"
-                class="px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700"
-              >
-                <option value="New Enquiry" ${lead.stage === 'New Enquiry' ? 'selected' : ''}>New Enquiry</option>
-                <option value="Qualifying (India)" ${lead.stage === 'Qualifying (India)' ? 'selected' : ''}>Qualifying (India)</option>
-                <option value="Qualified - Ready for Nilesh" ${lead.stage === 'Qualified - Ready for Nilesh' ? 'selected' : ''}>Ready for Nilesh</option>
-                <option value="Handed Over to UK" ${lead.stage === 'Handed Over to UK' ? 'selected' : ''}>Handed Over to UK</option>
-              </select>
-            </td>
-            <td class="py-3 px-3 text-right whitespace-nowrap">
-              <button
-                onclick="openHandoverModal('${lead.id}')"
-                class="px-3 py-1.5 rounded-xl bg-teal-slate hover:bg-teal-light text-white text-xs font-semibold transition"
-              >
-                Handover Brief
+            <td class="px-4 py-3 text-center"><span class="px-2 py-0.5 rounded-full font-semibold ${intentCls}">${l["Intent Score"] || "Warm"}</span></td>
+            <td class="px-4 py-3 text-center">
+              <button onclick="copyHandoverBrief(${idx})" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 font-semibold border border-sky-200">
+                Copy Handover Brief
               </button>
             </td>
-          </tr>
-        `;
-      }).join('');
+          </tr>`;
+      }).join("") || `<tr><td colspan="5" class="p-6 text-center text-slate-400">No leads logged yet.</td></tr>`;
     }
 
-    function updateLeadStage(leadId, newStage) {
-      const lead = appState.leads.find(l => l.id === leadId);
-      if (!lead) return;
-      lead.stage = newStage;
-      saveState();
-      renderLeads();
-      showToast(`Lead ${lead.company} updated to ${newStage}`);
-      pushToGoogleAppsScript({ action: 'updateLeadStage', id: leadId, stage: newStage });
+    function copyHandoverBrief(idx) {
+      const l = leadsData[idx];
+      const brief = `Hi Nilesh, here is a qualified UK/EU lead from Oakview Freight:\n\n` +
+        `• Company: ${l["Company Name"]}\n` +
+        `• Contact: ${l["Contact Person"]} (${l["Email / WhatsApp"]})\n` +
+        `• Source: ${l["Source Channel"]} | Intent: ${l["Intent Score"]}\n` +
+        `• Product Niche: ${l["Product Category"]}\n` +
+        `• Service Needed: ${l["Required Service"]}\n` +
+        `• Notes: ${l["Qualification Notes"] || "Ready for UK commercial quote."}`;
+      navigator.clipboard.writeText(brief);
+      alert("Nilesh handover brief copied! Ready to paste into WhatsApp or Email.");
     }
 
-    function openLeadModal() { document.getElementById('leadModal').classList.remove('hidden'); }
-    function closeLeadModal() { document.getElementById('leadModal').classList.add('hidden'); }
-
-    document.getElementById('newLeadForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const newLead = {
-        id: 'L-' + Math.floor(100 + Math.random() * 900),
-        company: document.getElementById('leadCompany').value.trim(),
-        name: document.getElementById('leadName').value.trim(),
-        source: document.getElementById('leadSource').value,
-        service: document.getElementById('leadService').value,
-        contact: document.getElementById('leadContact').value.trim(),
-        stage: document.getElementById('leadStage').value,
-        notes: document.getElementById('leadNotes').value.trim(),
-        createdAt: new Date().toISOString().slice(0, 10)
-      };
-
-      appState.leads.unshift(newLead);
-      saveState();
-      renderLeads();
-      closeLeadModal();
-      e.target.reset();
-      showToast(`Added lead: ${newLead.company}`);
-      pushToGoogleAppsScript({ action: 'addLead', lead: newLead });
-    });
-
-    function openHandoverModal(leadId) {
-      const lead = appState.leads.find(l => l.id === leadId);
-      if (!lead) return;
-
-      const brief = [
-        `OAKVIEW FREIGHT SERVICES LTD. — QUALIFIED LEAD HANDOVER`,
-        `--------------------------------------------------------`,
-        `Exporter / Company : ${lead.company}`,
-        `Decision Maker     : ${lead.name}`,
-        `Contact Details    : ${lead.contact}`,
-        `Lead Source        : ${lead.source}`,
-        `Service Required   : ${lead.service}`,
-        `Requirement Notes  : ${lead.notes}`,
-        `--------------------------------------------------------`,
-        `Action for UK Team (Nilesh): Please follow up directly for UK/EU commercial pricing quote & onboarding.`
-      ].join('\n');
-
-      document.getElementById('handoverText').value = brief;
-      const subject = encodeURIComponent(`Oakview Qualified Lead: ${lead.company} (${lead.service})`);
-      const body = encodeURIComponent(`Hi Nilesh,\n\nPlease find a qualified Indian exporter enquiry ready for UK pricing discussion:\n\n${brief}\n\nBest regards,\nJalal`);
-      document.getElementById('handoverMailtoBtn').href = `mailto:${appState.settings.nileshEmail}?subject=${subject}&body=${body}`;
-
-      document.getElementById('handoverModal').classList.remove('hidden');
-    }
-
-    function closeHandoverModal() { document.getElementById('handoverModal').classList.add('hidden'); }
-
-    function copyHandoverBrief() {
-      const textarea = document.getElementById('handoverText');
-      textarea.select();
-      document.execCommand('copy');
-      showToast('Handover brief copied for WhatsApp!');
-    }
-
-    // -----------------------------------------------------------------------
-    // 8. TAB 3: TIKTOK & SOCIAL CONTENT QUEUE (INDIA -> UK WORKFLOW)
-    // -----------------------------------------------------------------------
     function renderContentQueue() {
-      const grid = document.getElementById('contentCardsGrid');
-      grid.innerHTML = appState.content.map(item => {
-        const statusColor = {
-          'Draft (India)': 'bg-amber-50 text-amber-700 border-amber-200',
-          'Ready for Nilesh': 'bg-sky-50 text-teal-slate border-sky-200',
-          'Published in UK': 'bg-emerald-50 text-emerald-700 border-emerald-200'
-        }[item.status] || 'bg-slate-100 text-slate-700';
-
-        const mailSubject = encodeURIComponent(`TikTok / Social Asset Ready for UK Posting: ${item.title}`);
-        const mailBody = encodeURIComponent(
-          `Hi Nilesh,\n\nHere is the next ${item.platform} post ready for publishing from the UK:\n\n` +
-          `Topic: ${item.title}\n` +
-          `Video / Media Asset Link: ${item.assetUrl || 'Attached'}\n\n` +
-          `Caption & Hashtags:\n${item.caption}\n\nBest regards,\nJalal`
-        );
-
-        return `
-          <div class="rounded-2xl border border-slate-200 p-4 flex flex-col justify-between bg-slate-50/40">
-            <div>
-              <div class="flex items-center justify-between gap-2 mb-2.5">
-                <span class="text-xs font-bold text-navy">${item.platform}</span>
-                <select
-                  onchange="updateContentStatus('${item.id}', this.value)"
-                  class="px-2.5 py-1 rounded-xl border text-[11px] font-semibold ${statusColor}"
-                >
-                  <option value="Draft (India)" ${item.status === 'Draft (India)' ? 'selected' : ''}>Draft (India)</option>
-                  <option value="Ready for Nilesh" ${item.status === 'Ready for Nilesh' ? 'selected' : ''}>Ready for Nilesh</option>
-                  <option value="Published in UK" ${item.status === 'Published in UK' ? 'selected' : ''}>Published in UK</option>
-                </select>
-              </div>
-
-              <h3 class="text-sm font-bold text-slate-900 leading-snug">${item.title}</h3>
-              <p class="text-xs text-slate-600 mt-2 bg-white p-3 rounded-xl border border-slate-200/80 leading-relaxed">
-                ${item.caption}
-              </p>
+      document.getElementById("contentQueueList").innerHTML = contentData.map(c => `
+        <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sky-700">${c["Target Date"] || ""}</span>
+              <span class="px-2 py-0.5 rounded bg-slate-100 font-semibold">${c.Platform || ""}</span>
+              <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold">${c.Status || ""}</span>
             </div>
-
-            <div class="mt-4 pt-3 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-2">
-              <button
-                onclick="copyTextDirect(\`${item.caption.replace(/`/g, "'")}\`)"
-                class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-xs font-semibold text-slate-700 transition"
-              >
-                Copy Caption
-              </button>
-              <a
-                href="mailto:${appState.settings.nileshEmail}?subject=${mailSubject}&body=${mailBody}"
-                class="px-3 py-1.5 rounded-xl bg-navy hover:bg-navy-dark text-white text-xs font-semibold transition"
-              >
-                Send to Nilesh (UK)
-              </a>
-            </div>
+            <div class="font-bold text-slate-900 text-sm">${c["Topic / Hook"] || ""}</div>
+            <p class="text-slate-600">${c["Caption & Hashtags"] || ""}</p>
           </div>
-        `;
-      }).join('');
+          <div class="shrink-0 flex items-center gap-2">
+            ${c["Drive Asset Link"] ? `<a href="${c["Drive Asset Link"]}" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-semibold">Open Asset</a>` : ""}
+          </div>
+        </div>
+      `).join("") || `<div class="p-6 text-center text-xs text-slate-400">No queued posts yet.</div>`;
     }
 
-    function updateContentStatus(id, newStatus) {
-      const item = appState.content.find(c => c.id === id);
-      if (!item) return;
-      item.status = newStatus;
-      saveState();
-      renderContentQueue();
-      showToast(`Content status updated: ${newStatus}`);
-      pushToGoogleAppsScript({ action: 'updateContentStatus', id, status: newStatus });
-    }
+    // =========================================================================
+    // AI COPY STUDIO (LOCAL OLLAMA + FALLBACK TEMPLATES)
+    // =========================================================================
+    async function generateAiCopy() {
+      const type = document.getElementById("aiType").value;
+      const niche = document.getElementById("aiNiche").value;
+      const pain = document.getElementById("aiPain").value;
+      const box = document.getElementById("aiOutputBox");
+      const ollamaUrl = document.getElementById("settingsOllamaUrl").value.trim();
 
-    function openContentModal() { document.getElementById('contentModal').classList.remove('hidden'); }
-    function closeContentModal() { document.getElementById('contentModal').classList.add('hidden'); }
+      box.value = "Generating copy...";
+      const prompt = `Write a high-converting ${type} for Oakview Freight Services Ltd. (UK Importer of Record, DDP customs clearance, and UK final-mile delivery) targeting Indian exporters in ${niche} struggling with ${pain}. Keep it concise, authoritative, and include a clear call-to-action.`;
 
-    document.getElementById('newContentForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const newItem = {
-        id: 'C-' + Math.floor(10 + Math.random() * 90),
-        platform: document.getElementById('contentPlatform').value,
-        status: document.getElementById('contentStatus').value,
-        title: document.getElementById('contentTitle').value.trim(),
-        caption: document.getElementById('contentCaption').value.trim(),
-        assetUrl: document.getElementById('contentAssetUrl').value.trim()
-      };
-      appState.content.unshift(newItem);
-      saveState();
-      renderContentQueue();
-      closeContentModal();
-      e.target.reset();
-      showToast('Added asset to TikTok & Social Queue');
-      pushToGoogleAppsScript({ action: 'addContent', content: newItem });
-    });
-
-    function copyTextDirect(text) {
-      const temp = document.createElement('textarea');
-      temp.value = text;
-      document.body.appendChild(temp);
-      temp.select();
-      document.execCommand('copy');
-      document.body.removeChild(temp);
-      showToast('Copied to clipboard!');
-    }
-
-    function copySnippet(elId) {
-      copyTextDirect(document.getElementById(elId).innerText);
-    }
-
-    // -----------------------------------------------------------------------
-    // 9. TAB 4: SETTINGS & GOOGLE APPS SCRIPT BRIDGE
-    // -----------------------------------------------------------------------
-    function loadSettingsForm() {
-      document.getElementById('settingApiUrl').value = appState.settings.apiUrl || '';
-      document.getElementById('settingApiToken').value = appState.settings.apiToken || '';
-      document.getElementById('settingPin').value = appState.settings.pin || '2026';
-      document.getElementById('settingNileshEmail').value = appState.settings.nileshEmail || 'oakviewfreight@gmail.com';
-    }
-
-    function updateConnectionBadge() {
-      const badge = document.getElementById('connectionBadge');
-      if (appState.settings.apiUrl) {
-        badge.textContent = 'Live Google Sheet Connected';
-        badge.className = 'text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/30';
-      } else {
-        badge.textContent = 'Demo Mode (Local)';
-        badge.className = 'text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/30';
-      }
-    }
-
-    document.getElementById('settingsForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      appState.settings = {
-        apiUrl: document.getElementById('settingApiUrl').value.trim(),
-        apiToken: document.getElementById('settingApiToken').value.trim(),
-        pin: document.getElementById('settingPin').value.trim() || '2026',
-        nileshEmail: document.getElementById('settingNileshEmail').value.trim() || 'oakviewfreight@gmail.com'
-      };
-      saveState();
-      updateConnectionBadge();
-      showToast('Settings saved successfully');
-    });
-
-    async function pushToGoogleAppsScript(payload) {
-      if (!appState.settings.apiUrl) return;
       try {
-        await fetch(appState.settings.apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            token: appState.settings.apiToken,
-            ...payload
-          })
+        const res = await fetch(ollamaUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ model: "llama3", messages: [{ role: "user", content: prompt }] })
         });
-      } catch (err) {
-        console.warn('Apps Script sync warning:', err);
-      }
-    }
-
-    async function syncFromGoogleSheets() {
-      if (!appState.settings.apiUrl) {
-        showToast('Add your Google Apps Script URL in API Settings first.');
-        switchTab('settings');
-        return;
-      }
-      try {
-        showToast('Syncing with Google Sheets...');
-        const url = `${appState.settings.apiUrl}?token=${encodeURIComponent(appState.settings.apiToken)}`;
-        const res = await fetch(url);
         const data = await res.json();
-        if (data.checklist) appState.checklist = data.checklist;
-        if (data.leads) appState.leads = data.leads;
-        if (data.content) appState.content = data.content;
-        saveState();
-        renderChecklist();
-        renderLeads();
-        renderContentQueue();
-        showToast('Synced live data from Google Sheets!');
-      } catch (err) {
-        showToast('Sync failed. Verify Web App URL & permissions.');
+        if (data.choices && data.choices[0]) {
+          box.value = data.choices[0].message.content;
+          return;
+        }
+      } catch (e) {
+        // Fallback to built-in B2B templates when away from local PC
       }
+
+      const templates = {
+        linkedin: `Hi [First Name],\n\nI noticed your ${niche} brand is scaling fast. Many Indian exporters looking at Amazon UK FBA or TikTok Shop UK run into roadblocks with ${pain}.\n\nAt Oakview Freight Services Ltd. (UK), we act as your end-to-end UK Importer of Record (IOR), handle HMRC customs clearance under DDP, and manage UK warehousing & final-mile delivery—so you can sell in the UK without setting up a local UK entity first.\n\nOpen to a quick 10-minute chat this week to share how we can streamline your UK shipments?\n\nBest regards,\nJalal | Oakview Freight Services Ltd.`,
+        email: `Subject: Selling ${niche} on UK Amazon FBA / TikTok Shop without UK customs delays\n\nHi [First Name],\n\nExpanding ${niche} exports into the UK & EU shouldn't stall at the border because of ${pain}.\n\nOakview Freight Services Ltd. provides Indian brands with:\n1. UK/EU Importer of Record (IOR) & DDP Clearance\n2. HMRC Tariff & Compliance Consulting\n3. UK Warehousing & Final-Mile Delivery\n\nReply with your approximate monthly shipment volume and our UK team will share a tailored landed-cost breakdown.\n\nBest regards,\nJalal B — Oakview Freight Services Ltd.`,
+        tiktok: `[0:00-0:05 HOOK] Indian ${niche} founders: Stop letting ${pain} block you from selling on UK TikTok Shop and Amazon FBA!\n[0:05-0:25 VALUE] You do NOT need to spend months setting up a UK company just to clear HMRC customs. With Oakview Freight's Importer of Record (IOR) and DDP service, we clear your stock at UK ports and deliver straight to your UK warehouse or FBA center.\n[0:25-0:40 CTA] Comment 'UK' or tap the link in bio for a free UK export readiness check with Oakview Freight Services!`,
+        followup: `Hi [First Name],\n\nJust bubbling this up in case you're planning Q4/Q1 inventory restocks into the UK or EU. Happy to send over a quick DDP & Importer of Record checklist for ${niche} brands whenever convenient.\n\nBest,\nJalal | Oakview Freight Services Ltd.`
+      };
+      box.value = templates[type];
     }
 
-    function resetDemoData() {
-      appState.checklist = JSON.parse(JSON.stringify(DEFAULT_CHECKLIST));
-      appState.leads = JSON.parse(JSON.stringify(DEFAULT_LEADS));
-      appState.content = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
-      saveState();
-      renderChecklist();
-      renderLeads();
-      renderContentQueue();
-      showToast('Demo data restored');
+    function copyAiOutput() {
+      const box = document.getElementById("aiOutputBox");
+      navigator.clipboard.writeText(box.value);
+      alert("Copied to clipboard!");
+    }
+
+    function saveSettings() {
+      const url = document.getElementById("settingsScriptUrl").value.trim();
+      localStorage.setItem("oakview_script_url", url);
+      SCRIPT_URL = url;
+      alert("Settings saved!");
+    }
+
+    function switchTab(tabName) {
+      ["overview", "checklist", "leads", "content", "ai", "settings"].forEach(t => {
+        document.getElementById("view-" + t).classList.add("hidden");
+        document.getElementById("tab-" + t).classList.remove("tab-active");
+      });
+      document.getElementById("view-" + tabName).classList.remove("hidden");
+      document.getElementById("tab-" + tabName).classList.add("tab-active");
     }
   </script>
 </body>
