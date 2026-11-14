@@ -30,6 +30,7 @@ jobs:
           cp CNAME _site/CNAME
           if [ -d assets ]; then cp -R assets _site/assets; fi
           if [ -d images ]; then cp -R images _site/images; fi
+          if [ -d services ]; then cp -R services _site/services; fi
           if [ -f robots.txt ]; then cp robots.txt _site/robots.txt; fi
           if [ -f sitemap.xml ]; then cp sitemap.xml _site/sitemap.xml; fi
       - name: Upload Pages artifact
