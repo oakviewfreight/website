@@ -1237,6 +1237,72 @@
         </div>
     </footer>
 
+    <!-- ===================================================================== -->
+    <!-- OAKVIEW AI TRADE & LOGISTICS ASSISTANT CHATBOT WIDGET                 -->
+    <!-- ===================================================================== -->
+    <div id="oakviewAiChatbotWrapper" class="fixed bottom-5 right-5 z-50 flex flex-col items-end">
+        <!-- Chat Window -->
+        <div id="oakviewChatWindow" class="hidden mb-3 w-[92vw] sm:w-[390px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+            <!-- Header -->
+            <div class="bg-oaknavy-900 text-white px-4 py-3.5 flex items-center justify-between border-b border-white/10">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-oakamber-500/20 border border-oakamber-400/40 text-oakamber-400 flex items-center justify-center">
+                        <i class="fa-solid fa-robot text-base"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-sm leading-tight">Oakview UK Trade AI</div>
+                        <div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-0.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span>Online &bull; IOR, HMRC &amp; FBA Specialist</span>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="toggleOakviewChat(false)" aria-label="Close AI Chat" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Messages Area -->
+            <div id="oakviewChatMessages" class="p-4 h-80 overflow-y-auto space-y-3 bg-slate-50 text-xs sm:text-sm">
+                <div class="flex items-start gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-oaknavy-900 text-oakamber-400 flex items-center justify-center flex-shrink-0 mt-0.5 text-[11px] font-bold">
+                        AI
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none p-3 text-slate-700 shadow-sm leading-relaxed">
+                        Hello! I am the <strong class="text-oaknavy-900">Oakview Freight Services Ltd</strong> AI Assistant. Ask me anything about India-to-UK shipping, UK Importer of Record (IOR), HMRC customs, Amazon FBA UK, or TikTok Shop UK fulfilment.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Question Chips -->
+            <div class="px-3.5 py-2 bg-white border-t border-slate-100 flex gap-1.5 overflow-x-auto">
+                <button type="button" onclick="askOakviewQuick('How does UK Importer of Record (IOR) work?')" class="flex-shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-slate-100 hover:bg-oakamber-500/15 text-oaknavy-900 transition">
+                    What is UK IOR?
+                </button>
+                <button type="button" onclick="askOakviewQuick('What are the requirements for TikTok Shop UK?')" class="flex-shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-slate-100 hover:bg-oakamber-500/15 text-oaknavy-900 transition">
+                    TikTok Shop UK
+                </button>
+                <button type="button" onclick="askOakviewQuick('Amazon FBA UK pallet & FNSKU prep rules?')" class="flex-shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-slate-100 hover:bg-oakamber-500/15 text-oaknavy-900 transition">
+                    Amazon FBA UK
+                </button>
+            </div>
+
+            <!-- Chat Input -->
+            <form id="oakviewChatForm" onsubmit="handleOakviewChatSubmit(event)" class="p-3 bg-white border-t border-slate-200 flex items-center gap-2">
+                <input type="text" id="oakviewChatInput" autocomplete="off" placeholder="Ask about UK IOR, customs, FBA..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-100 text-slate-900 text-xs sm:text-sm focus:bg-white focus:ring-2 focus:ring-oakamber-500 focus:outline-none">
+                <button type="submit" aria-label="Send message" class="p-2.5 rounded-xl bg-oaknavy-900 hover:bg-oaknavy-800 text-oakamber-400 transition flex-shrink-0">
+                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Floating Launcher Button -->
+        <button type="button" onclick="toggleOakviewChat()" class="bg-oaknavy-900 hover:bg-oaknavy-800 text-white px-5 py-3.5 rounded-full shadow-2xl border border-oakamber-400/40 flex items-center gap-2.5 transition transform hover:-translate-y-0.5">
+            <i class="fa-solid fa-comments text-oakamber-400 text-lg"></i>
+            <span class="font-bold text-xs sm:text-sm">Ask Oakview AI</span>
+        </button>
+    </div>
+
     <script>
         // Mobile Menu Toggle
         function toggleMobileMenu() {
@@ -1449,6 +1515,117 @@
             }
         }
 
+        // =====================================================================
+        // OAKVIEW AI TRADE ASSISTANT CHATBOT LOGIC
+        // =====================================================================
+        function toggleOakviewChat(forceOpen) {
+            const win = document.getElementById('oakviewChatWindow');
+            if (typeof forceOpen === 'boolean') {
+                win.classList.toggle('hidden', !forceOpen);
+            } else {
+                win.classList.toggle('hidden');
+            }
+            if (!win.classList.contains('hidden')) {
+                document.getElementById('oakviewChatInput').focus();
+            }
+        }
+
+        function appendOakviewChatBubble(sender, text) {
+            const container = document.getElementById('oakviewChatMessages');
+            const row = document.createElement('div');
+            if (sender === 'user') {
+                row.className = 'flex items-start justify-end gap-2';
+                row.innerHTML = `
+                    <div class="bg-oaknavy-900 text-white rounded-2xl rounded-tr-none p-3 max-w-[82%] shadow-sm leading-relaxed">
+                        ${escapeHtml(text)}
+                    </div>`;
+            } else {
+                row.className = 'flex items-start gap-2.5';
+                row.innerHTML = `
+                    <div class="w-7 h-7 rounded-lg bg-oaknavy-900 text-oakamber-400 flex items-center justify-center flex-shrink-0 mt-0.5 text-[11px] font-bold">
+                        AI
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none p-3 text-slate-700 max-w-[84%] shadow-sm leading-relaxed">
+                        ${escapeHtml(text)}
+                    </div>`;
+            }
+            container.appendChild(row);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function askOakviewQuick(question) {
+            const input = document.getElementById('oakviewChatInput');
+            input.value = question;
+            document.getElementById('oakviewChatForm').dispatchEvent(new Event('submit'));
+        }
+
+        async function fetchOakviewAiReply(userMessage) {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            const systemInstruction = "You are the official AI Trade Assistant for Oakview Freight Services Ltd, a UK-registered logistics company specializing in India-to-UK freight forwarding, UK Importer of Record (IOR) representation, HMRC CDS customs clearance, Amazon FBA UK prep/delivery, and TikTok Shop UK 3PL fulfilment. Keep answers concise (under 80 words), accurate, professional, and invite users to request a custom quote via the form on the page or inquiry@oakviewfreight.com.";
+
+            const payload = {
+                contents: [{ parts: [{ text: userMessage }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            const delays = [1000, 2000, 4000];
+            for (let attempt = 0; attempt <= delays.length; attempt++) {
+                try {
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error('API request failed');
+                    const data = await res.json();
+                    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (reply) return reply;
+                } catch (e) {
+                    if (attempt === delays.length) break;
+                    await new Promise(r => setTimeout(r, delays[attempt]));
+                }
+            }
+
+            // Domain-specific fallback responses if offline
+            const q = userMessage.toLowerCase();
+            if (q.includes('ior') || q.includes('importer')) {
+                return "If you don't have a UK-registered entity or EORI, Oakview Freight Services Ltd acts as your legal UK Importer of Record (IOR)—managing HMRC CDS customs declarations, tariff classification, and duty/VAT settlement so your cargo clears smoothly.";
+            }
+            if (q.includes('tiktok')) {
+                return "TikTok Shop UK requires stock to be held locally inside the UK. We import your goods from India under our UK IOR service, store them in our UK 3PL warehouse, and dispatch orders or replenish Fulfilled by TikTok (FBT) hubs within SLA.";
+            }
+            if (q.includes('amazon') || q.includes('fba')) {
+                return "For Amazon FBA UK, we handle FNSKU labelling, re-palletising onto 1200x1000mm UK standard 4-way wooden pallets, and booked Carrier Central delivery appointments into BHX4, EMA1, LBA4, MAN1, and all UK centres.";
+            }
+            return "Oakview Freight Services Ltd handles Air & Sea freight from India, UK Importer of Record (IOR), HMRC customs clearance, and Amazon FBA / TikTok Shop UK fulfilment. Use our Freight Estimator on the page or email inquiry@oakviewfreight.com for a tailored quote!";
+        }
+
+        async function handleOakviewChatSubmit(event) {
+            event.preventDefault();
+            const input = document.getElementById('oakviewChatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            input.value = '';
+            appendOakviewChatBubble('user', msg);
+
+            const container = document.getElementById('oakviewChatMessages');
+            const typingId = 'oakview-typing-' + Date.now();
+            const typingEl = document.createElement('div');
+            typingEl.id = typingId;
+            typingEl.className = 'text-xs text-slate-400 pl-9';
+            typingEl.textContent = 'Oakview AI is typing...';
+            container.appendChild(typingEl);
+            container.scrollTop = container.scrollHeight;
+
+            const reply = await fetchOakviewAiReply(msg);
+            const existingTyping = document.getElementById(typingId);
+            if (existingTyping) existingTyping.remove();
+
+            appendOakviewChatBubble('ai', reply);
+        }
+
         // Initialize Estimator on Load
         window.addEventListener('DOMContentLoaded', () => {
             updateEstimate();
@@ -1458,5 +1635,3 @@
     </script>
 </body>
 </html>
-
-
